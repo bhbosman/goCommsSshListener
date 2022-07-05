@@ -7,7 +7,6 @@ import (
 	common2 "github.com/bhbosman/goCommsSshListener/common"
 	internal2 "github.com/bhbosman/goCommsSshListener/internal"
 	sshStack "github.com/bhbosman/goCommsSshListener/stack"
-	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/gocomms/intf"
@@ -33,11 +32,7 @@ func NewSshListenApp(
 			goCommsDefinitions.ProvideTransportFactoryForOnlySSHStack(
 				sshStack.Provide(),
 			),
-		),
-		common.NewConnectionInstanceOptions(
 			ProvideConnectionReactorFactory(),
-		),
-		common.NewConnectionInstanceOptions(
 			fx.Provide(
 				fx.Annotated{
 					Target: func() (common2.ISshChannelSettings, error) {
@@ -45,8 +40,6 @@ func NewSshListenApp(
 					},
 				},
 			),
-		),
-		common.NewConnectionInstanceOptions(
 			fx.Provide(
 				fx.Annotated{
 					Target: func(
@@ -77,20 +70,4 @@ func NewSshListenApp(
 		settings...,
 	)
 	return f
-}
-
-func ProvideConnectionReactorFactory() fx.Option {
-	return fx.Provide(
-		fx.Annotated{
-			Target: func(
-				params struct {
-					fx.In
-					GoFunctionCounter GoFunctionCounter.IService
-				},
-			) (intf.IConnectionReactorFactory, error) {
-				cfr := NewFactory(params.GoFunctionCounter)
-				return cfr, nil
-			},
-		},
-	)
 }

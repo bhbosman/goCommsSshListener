@@ -135,8 +135,8 @@ func (self *manager) ListenForNewConnections() error {
 					model.ServerConnection,
 					acceptedChannel,
 					stackName,
-					netBase.NewOverrideCreateIConnectionReactor(provideCreateIConnectionReactor()),
 					netBase.NewAddFxOptions(
+						provideCreateIConnectionReactor(),
 						fx.Provide(
 							fx.Annotated{
 								Name: "ChannelExtraData",
