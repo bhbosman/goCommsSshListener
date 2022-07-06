@@ -21,7 +21,7 @@ import (
 
 type manager struct {
 	netBase.ConnNetManager
-	listener           ISshListenerAccept
+	listener           iListenerAccept
 	MaxConnections     int
 	OnCreateConnection goCommsDefinitions.IOnCreateConnection
 	ConnectionReactor  internal.ISshConnectionReactor
@@ -72,7 +72,7 @@ func (self *manager) ListenForNewConnections() error {
 					continue loop
 				}
 				extraData := acceptNewChannel.ExtraData()
-				var acceptedChannel common.ISshChannel
+				var acceptedChannel common.IChannel
 				var acceptedChannelRequestChannel <-chan *ssh.Request
 				acceptedChannel, acceptedChannelRequestChannel, err = acceptNewChannel.Accept(
 					channelType,
@@ -88,7 +88,7 @@ func (self *manager) ListenForNewConnections() error {
 				}
 
 				onErrorFlush := func(
-					acceptedChannel common.ISshChannel,
+					acceptedChannel common.IChannel,
 					acceptedChannelRequestChannel <-chan *ssh.Request,
 					cancelFunc context.CancelFunc, logger *zap.Logger) func(err error) {
 					called := false
@@ -120,21 +120,12 @@ func (self *manager) ListenForNewConnections() error {
 
 				acceptedChannel = newSshChannelWithSemaphoreWrapper(acceptedChannel, sem)
 
-				// override the stack here to use the session's connection stack
-				stackName := self.StackName
-				switch channelType {
-				case "session":
-					stackName = goCommsDefinitions.TransportFactoryForSshChannelSession
-				default:
-
-				}
 				uniqueReference := self.UniqueSessionNumber.Next(self.ConnectionInstancePrefix)
 				connectionApp, ctx, cancelFunc := self.NewConnectionInstanceWithStackName(
 					uniqueReference,
 					self.GoFunctionCounter,
 					model.ServerConnection,
 					acceptedChannel,
-					stackName,
 					netBase.NewAddFxOptions(
 						provideCreateIConnectionReactor(),
 						fx.Provide(
@@ -151,7 +142,7 @@ func (self *manager) ListenForNewConnections() error {
 									params struct {
 										fx.In
 									},
-								) (common.ISshChannel, error) {
+								) (common.IChannel, error) {
 									return acceptedChannel, nil
 								},
 							},
@@ -264,8 +255,8 @@ func (self *manager) ListenForNewConnections() error {
 	return err
 }
 
-func (self *manager) acceptWithContext() (common.ISshNewChannel, context.CancelFunc, error) {
-	return self.listener.AcceptWithContext()
+func (self *manager) acceptWithContext() (common.INewChannel, context.CancelFunc, error) {
+	return self.listener.acceptWithContext()
 }
 
 func NewManager(
@@ -274,14 +265,13 @@ func NewManager(
 		UseProxy                                 bool     `name:"UseProxy"`
 		ConnectionUrl                            *url.URL `name:"ConnectionUrl"`
 		ProxyUrl                                 *url.URL `name:"ProxyUrl"`
-		ListenerAccept                           ISshListenerAccept
+		ListenerAccept                           iListenerAccept
 		OnCreateConnection                       goCommsDefinitions.IOnCreateConnection
 		ConnectionManager                        goConnectionManager.IService
 		CancelCtx                                context.Context
 		CancelFunction                           context.CancelFunc
-		Settings                                 *sshChannelListenerManagerSettings
+		Settings                                 *channelListenerManagerSettings
 		ZapLogger                                *zap.Logger
-		StackName                                string `name:"StackName"`
 		ConnectionName                           string `name:"ConnectionName"`
 		ConnectionInstancePrefix                 string `name:"ConnectionInstancePrefix"`
 		UniqueSessionNumber                      interfaces.IUniqueReferenceService
@@ -307,7 +297,6 @@ func NewManager(
 		params.ConnectionUrl,
 		params.CancelCtx,
 		params.CancelFunction,
-		params.StackName,
 		params.ConnectionManager,
 		params.Settings.userContext,
 		params.ZapLogger,

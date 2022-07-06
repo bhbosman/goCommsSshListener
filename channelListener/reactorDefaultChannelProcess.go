@@ -13,7 +13,7 @@ type defaultChannelProcess struct {
 	SetSizeCalled        bool
 	Rows                 int
 	Cols                 int
-	sshChannel           common.ISshChannel
+	sshChannel           common.IChannel
 	timeOutCancelContext context.Context
 	timeOutCancelFunc    context.CancelFunc
 	closeCancelContext   context.Context
@@ -31,11 +31,12 @@ func (self *defaultChannelProcess) SetLookupTerminfo(terminfo *terminfo.Terminfo
 func newDefaultChannelProcess(
 	parentCancelContext context.Context,
 	parentCancelFunc context.CancelFunc,
-	sshChannel common.ISshChannel,
+	sshChannel common.IChannel,
 	goFunctionCounter GoFunctionCounter.IService,
-) common.ISshChannelProcess {
+) common.IChannelProcess {
 	timeOutCancelContext, timeOutCancelFunc := context.WithTimeout(parentCancelContext, time.Second*10)
 	closeCancelContext, closeCancelFunc := context.WithCancel(parentCancelContext)
+
 	return &defaultChannelProcess{
 		sshChannel:           sshChannel,
 		timeOutCancelContext: timeOutCancelContext,

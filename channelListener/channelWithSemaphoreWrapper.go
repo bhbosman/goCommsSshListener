@@ -5,8 +5,8 @@ import (
 	"sync"
 )
 
-type sshChannelWithSemaphoreWrapper struct {
-	common.ISshChannel
+type channelWithSemaphoreWrapper struct {
+	common.IChannel
 	mutex            sync.Mutex
 	closed           bool
 	releaseSemaphore interface {
@@ -14,7 +14,7 @@ type sshChannelWithSemaphoreWrapper struct {
 	}
 }
 
-func (self *sshChannelWithSemaphoreWrapper) Close() error {
+func (self *channelWithSemaphoreWrapper) Close() error {
 	if self.closed {
 		return nil
 	}
@@ -24,7 +24,7 @@ func (self *sshChannelWithSemaphoreWrapper) Close() error {
 		return nil
 	}
 	self.closed = true
-	err := self.ISshChannel.Close()
+	err := self.IChannel.Close()
 	local := self.releaseSemaphore
 	self.releaseSemaphore = nil
 	if local != nil {
@@ -34,12 +34,12 @@ func (self *sshChannelWithSemaphoreWrapper) Close() error {
 }
 
 func newSshChannelWithSemaphoreWrapper(
-	conn common.ISshChannel,
+	conn common.IChannel,
 	releaseSemaphore interface {
 		Release(int64)
-	}) *sshChannelWithSemaphoreWrapper {
-	return &sshChannelWithSemaphoreWrapper{
-		ISshChannel:      conn,
+	}) *channelWithSemaphoreWrapper {
+	return &channelWithSemaphoreWrapper{
+		IChannel:         conn,
 		mutex:            sync.Mutex{},
 		releaseSemaphore: releaseSemaphore,
 	}

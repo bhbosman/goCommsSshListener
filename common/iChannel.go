@@ -5,7 +5,7 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-type ISshChannel interface {
+type IChannel interface {
 	ssh.Channel
 	goCommsDefinitions.ISpecificInformationForConnection
 	ChannelType() string

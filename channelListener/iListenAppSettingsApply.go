@@ -2,7 +2,7 @@ package channelListener
 
 import "github.com/bhbosman/gocomms/common"
 
-type ISshListenAppSettingsApply interface {
+type iListenAppSettingsApply interface {
 	common.INetManagerSettingsApply
-	apply(settings *sshChannelListenerManagerSettings) error
+	apply(settings *channelListenerManagerSettings) error
 }

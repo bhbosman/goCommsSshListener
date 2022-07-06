@@ -8,8 +8,8 @@ func provideCreateListenAcceptResource(
 	params struct {
 		fx.In
 		Listener iChannelListener
-	}) (ISshListenerAccept, error) {
-	return &SshListenerAccept{
-		Listener: params.Listener,
+	}) (iListenerAccept, error) {
+	return &listenerAccept{
+		listener: params.Listener,
 	}, nil
 }

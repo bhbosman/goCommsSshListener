@@ -32,7 +32,7 @@ func NewSshListenApp(
 			goCommsDefinitions.ProvideTransportFactoryForOnlySSHStack(
 				sshStack.Provide(),
 			),
-			ProvideConnectionReactorFactory(),
+			ProvideConnectionReactor(),
 			fx.Provide(
 				fx.Annotated{
 					Target: func() (common2.ISshChannelSettings, error) {

@@ -9,7 +9,7 @@ type sshChannelListenerOverrideListenerFactory struct {
 	listenerFactory func() (net.Listener, error)
 }
 
-func (self *sshChannelListenerOverrideListenerFactory) apply(settings *sshChannelListenerManagerSettings) (fx.Option, error) {
+func (self *sshChannelListenerOverrideListenerFactory) apply(settings *channelListenerManagerSettings) (fx.Option, error) {
 	settings.setListenerFactory(self.listenerFactory)
 	return nil, nil
 }

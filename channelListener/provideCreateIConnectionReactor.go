@@ -23,7 +23,7 @@ func provideCreateIConnectionReactor() fx.Option {
 					Logger               *zap.Logger
 					SshConnectionReactor internal.ISshConnectionReactor
 					SshChannelSettings   common.ISshChannelSettings `optional:"true"`
-					SshChannel           common.ISshChannel
+					SshChannel           common.IChannel
 					GoFunctionCounter    GoFunctionCounter.IService
 					ExtraData            []byte      `name:"ChannelExtraData"`
 					ClientContext        interface{} `name:"UserContext"`

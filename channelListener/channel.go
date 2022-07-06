@@ -10,75 +10,75 @@ import (
 	"time"
 )
 
-type SshChannel struct {
-	channel                          ssh.Channel
+type channel struct {
+	sshChannel                       ssh.Channel
 	SpecificInformationForConnection goCommsDefinitions.ISpecificInformationForConnection
 	name                             string
 	additionalData                   []byte
 }
 
-func (self *SshChannel) ChannelType() string {
+func (self *channel) ChannelType() string {
 	return self.name
 }
 
-func (self *SshChannel) Read(data []byte) (int, error) {
-	return self.channel.Read(data)
+func (self *channel) Read(data []byte) (int, error) {
+	return self.sshChannel.Read(data)
 }
 
-func (self *SshChannel) Write(data []byte) (int, error) {
-	return self.channel.Write(data)
+func (self *channel) Write(data []byte) (int, error) {
+	return self.sshChannel.Write(data)
 }
 
-func (self *SshChannel) Close() error {
-	return self.channel.Close()
+func (self *channel) Close() error {
+	return self.sshChannel.Close()
 }
 
-func (self *SshChannel) CloseWrite() error {
-	return self.channel.CloseWrite()
+func (self *channel) CloseWrite() error {
+	return self.sshChannel.CloseWrite()
 }
 
-func (self *SshChannel) SendRequest(name string, wantReply bool, payload []byte) (bool, error) {
-	return self.channel.SendRequest(name, wantReply, payload)
+func (self *channel) SendRequest(name string, wantReply bool, payload []byte) (bool, error) {
+	return self.sshChannel.SendRequest(name, wantReply, payload)
 }
 
-func (self *SshChannel) Stderr() io.ReadWriter {
-	return self.channel.Stderr()
+func (self *channel) Stderr() io.ReadWriter {
+	return self.sshChannel.Stderr()
 }
 
-func (self *SshChannel) LocalAddr() net.Addr {
+func (self *channel) LocalAddr() net.Addr {
 	return self.SpecificInformationForConnection.LocalAddr()
 }
 
-func (self *SshChannel) RemoteAddr() net.Addr {
+func (self *channel) RemoteAddr() net.Addr {
 	return self.SpecificInformationForConnection.RemoteAddr()
 }
 
-func (self *SshChannel) SetDeadline(t time.Time) error {
+func (self *channel) SetDeadline(t time.Time) error {
 	return self.SpecificInformationForConnection.SetDeadline(t)
 }
 
-func (self *SshChannel) SetReadDeadline(t time.Time) error {
+func (self *channel) SetReadDeadline(t time.Time) error {
 	return self.SpecificInformationForConnection.SetReadDeadline(t)
 }
 
-func (self *SshChannel) SetWriteDeadline(t time.Time) error {
+func (self *channel) SetWriteDeadline(t time.Time) error {
 	return self.SpecificInformationForConnection.SetWriteDeadline(t)
 }
 
 func NewSshChannel(
 	name string,
-	channel ssh.Channel,
+	sshChannel ssh.Channel,
 	specificInformationForConnection goCommsDefinitions.ISpecificInformationForConnection,
 	additionalData []byte,
-) (common.ISshChannel, error) {
-	if channel == nil {
+) (common.IChannel, error) {
+	if sshChannel == nil {
 		return nil, goerrors.InvalidParam
 	}
 	if specificInformationForConnection == nil {
 		return nil, goerrors.InvalidParam
 	}
-	return &SshChannel{
-		channel:                          channel,
+	return &channel{
+		sshChannel:                       sshChannel,
 		SpecificInformationForConnection: specificInformationForConnection,
 		name:                             name,
 		additionalData:                   additionalData,

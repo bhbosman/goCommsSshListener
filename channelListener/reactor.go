@@ -17,89 +17,28 @@ import (
 	"io"
 )
 
-type ptyRequestMsg struct {
-	Term     string
-	Columns  uint32
-	Rows     uint32
-	Width    uint32
-	Height   uint32
-	Modelist string
-}
-
-type execMsg struct {
-	Command string
-}
-
-type ptyWindowChangeMsg struct {
-	Columns uint32
-	Rows    uint32
-	Width   uint32
-	Height  uint32
-}
-
 type reactor struct {
-	ChannelType                    string
-	CancelCtx                      context.Context
-	CancelFunc                     context.CancelFunc
-	sshChannel                     common.ISshChannel
+	channelType                    string
+	cancelCtx                      context.Context
+	cancelFunc                     context.CancelFunc
+	sshChannel                     common.IChannel
 	toConnectionReactor            goprotoextra.ToReactorFunc
-	channelProcess                 common.ISshChannelProcess
+	channelProcess                 common.IChannelProcess
 	messageRouter                  *messageRouter.MessageRouter
 	onSend                         goprotoextra.ToConnectionFunc
 	logger                         *zap.Logger
-	SshChannelSessionSettings      common.ISshChannelSessionSettings
-	ExtraData                      []byte
+	sshChannelSessionSettings      common.ISshChannelSessionSettings
+	extraData                      []byte
 	goFunctionCounter              GoFunctionCounter.IService
 	toConnectionFuncReplacement    rxgo.NextFunc
 	toConnectionReactorReplacement rxgo.NextFunc
-}
-
-func NewReactor(
-	ChannelType string,
-	CancelCtx context.Context,
-	CancelFunc context.CancelFunc,
-	logger *zap.Logger,
-	sshChannel common.ISshChannel,
-	SshChannelSessionSettings common.ISshChannelSessionSettings,
-	ExtraData []byte,
-	goFunctionCounter GoFunctionCounter.IService,
-) (intf.IConnectionReactor, error) {
-	defaultSessionProcess := newDefaultChannelProcess(
-		CancelCtx,
-		CancelFunc,
-		sshChannel,
-		goFunctionCounter,
-	)
-	err := defaultSessionProcess.RunHandler()
-	if err != nil {
-		return nil, err
-	}
-
-	reactor := &reactor{
-		ChannelType:               ChannelType,
-		CancelCtx:                 CancelCtx,
-		CancelFunc:                CancelFunc,
-		sshChannel:                sshChannel,
-		channelProcess:            defaultSessionProcess,
-		messageRouter:             messageRouter.NewMessageRouter(),
-		logger:                    logger,
-		SshChannelSessionSettings: SshChannelSessionSettings,
-		ExtraData:                 ExtraData,
-		goFunctionCounter:         goFunctionCounter,
-	}
-
-	reactor.messageRouter.Add(reactor.handleEmptyQueue)
-	reactor.messageRouter.Add(reactor.handleSshRequest)
-	reactor.messageRouter.Add(reactor.handleReaderWriter)
-
-	return reactor, nil
 }
 
 func (self *reactor) handleEmptyQueue(_ *messages.EmptyQueue) error {
 	return nil
 }
 
-func (self *reactor) setProcess(newProcess common.ISshChannelProcess) error {
+func (self *reactor) setProcess(newProcess common.IChannelProcess) error {
 	old := self.channelProcess
 	self.channelProcess = newProcess
 	if defaultProcess, ok := old.(*defaultChannelProcess); ok && defaultProcess.SetSizeCalled {
@@ -118,6 +57,7 @@ func (self *reactor) setProcess(newProcess common.ISshChannelProcess) error {
 	}
 	return nil
 }
+
 func (self *reactor) handleSshRequest(request *ssh.Request) {
 
 	switch request.Type {
@@ -140,7 +80,7 @@ func (self *reactor) handleSshRequest(request *ssh.Request) {
 	//	}
 
 	case "shell":
-		whatChannelToUse, err := self.SshChannelSessionSettings.UseDefault()
+		whatChannelToUse, err := self.sshChannelSessionSettings.UseDefault()
 		if err != nil {
 			err = self.sshChannel.Close()
 			if err != nil {
@@ -160,11 +100,11 @@ func (self *reactor) handleSshRequest(request *ssh.Request) {
 			}
 			break
 		case common.UseCustomChannelProcess:
-			var newProcess common.ISshChannelProcess
-			newProcess, err = self.SshChannelSessionSettings.CreateChannelProcess(
+			var newProcess common.IChannelProcess
+			newProcess, err = self.sshChannelSessionSettings.CreateChannelProcess(
 				self.sshChannel,
-				self.CancelCtx,
-				self.CancelFunc,
+				self.cancelCtx,
+				self.cancelFunc,
 				self.onSend,
 				self.toConnectionFuncReplacement,
 				self.logger,
@@ -253,8 +193,8 @@ func (self *reactor) Close() error {
 func (self *reactor) createEchoChannelProcess() error {
 	newProcess, err := newEchoShellProcess(
 		self.sshChannel,
-		self.CancelCtx,
-		self.CancelFunc,
+		self.cancelCtx,
+		self.cancelFunc,
 		self.onSend,
 		self.toConnectionFuncReplacement,
 		self.goFunctionCounter,
@@ -270,7 +210,7 @@ func (self *reactor) createEchoChannelProcess() error {
 	return self.assignChannelProcess(newProcess)
 }
 
-func (self *reactor) assignChannelProcess(process common.ISshChannelProcess) error {
+func (self *reactor) assignChannelProcess(process common.IChannelProcess) error {
 
 	err := self.setProcess(process)
 	if err != nil {
@@ -292,4 +232,65 @@ func (self *reactor) assignChannelProcess(process common.ISshChannelProcess) err
 		return err
 	}
 	return nil
+}
+
+func NewReactor(
+	channelType string,
+	cancelCtx context.Context,
+	cancelFunc context.CancelFunc,
+	logger *zap.Logger,
+	sshChannel common.IChannel,
+	sshChannelSessionSettings common.ISshChannelSessionSettings,
+	extraData []byte,
+	goFunctionCounter GoFunctionCounter.IService,
+) (intf.IConnectionReactor, error) {
+	defaultSessionProcess := newDefaultChannelProcess(
+		cancelCtx,
+		cancelFunc,
+		sshChannel,
+		goFunctionCounter,
+	)
+	err := defaultSessionProcess.RunHandler()
+	if err != nil {
+		return nil, err
+	}
+
+	reactorInstance := &reactor{
+		channelType:               channelType,
+		cancelCtx:                 cancelCtx,
+		cancelFunc:                cancelFunc,
+		sshChannel:                sshChannel,
+		channelProcess:            defaultSessionProcess,
+		messageRouter:             messageRouter.NewMessageRouter(),
+		logger:                    logger,
+		sshChannelSessionSettings: sshChannelSessionSettings,
+		extraData:                 extraData,
+		goFunctionCounter:         goFunctionCounter,
+	}
+
+	reactorInstance.messageRouter.Add(reactorInstance.handleEmptyQueue)
+	reactorInstance.messageRouter.Add(reactorInstance.handleSshRequest)
+	reactorInstance.messageRouter.Add(reactorInstance.handleReaderWriter)
+
+	return reactorInstance, nil
+}
+
+type ptyRequestMsg struct {
+	Term     string
+	Columns  uint32
+	Rows     uint32
+	Width    uint32
+	Height   uint32
+	Modelist string
+}
+
+type execMsg struct {
+	Command string
+}
+
+type ptyWindowChangeMsg struct {
+	Columns uint32
+	Rows    uint32
+	Width   uint32
+	Height  uint32
 }

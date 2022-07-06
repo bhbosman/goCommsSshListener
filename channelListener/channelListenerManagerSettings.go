@@ -5,17 +5,17 @@ import (
 	"net"
 )
 
-type sshChannelListenerManagerSettings struct {
+type channelListenerManagerSettings struct {
 	common.NetManagerSettings
 	userContext           interface{}
 	netListenerFactory    interface{} //func() (net.Listener, error)
 	listenerAcceptFactory interface{} //func(IListenerAccept, err)
 }
 
-func (self *sshChannelListenerManagerSettings) setListenerAcceptFactory(listenerAcceptFactory func(listener net.Listener) (ISshListenerAccept, error)) {
+func (self *channelListenerManagerSettings) setListenerAcceptFactory(listenerAcceptFactory func(listener net.Listener) (iListenerAccept, error)) {
 	self.listenerAcceptFactory = listenerAcceptFactory
 }
 
-func (self *sshChannelListenerManagerSettings) setListenerFactory(netListenerFactory func() (net.Listener, error)) {
+func (self *channelListenerManagerSettings) setListenerFactory(netListenerFactory func() (net.Listener, error)) {
 	self.netListenerFactory = netListenerFactory
 }

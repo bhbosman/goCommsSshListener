@@ -9,36 +9,36 @@ import (
 	"time"
 )
 
-type SshNewChannel struct {
-	newChannel                       ssh.NewChannel
+type newChannel struct {
+	sshNewChannel                    ssh.NewChannel
 	specificInformationForConnection goCommsDefinitions.ISpecificInformationForConnection
 }
 
-func (self *SshNewChannel) LocalAddr() net.Addr {
+func (self *newChannel) LocalAddr() net.Addr {
 	return self.specificInformationForConnection.LocalAddr()
 }
 
-func (self *SshNewChannel) RemoteAddr() net.Addr {
+func (self *newChannel) RemoteAddr() net.Addr {
 	return self.specificInformationForConnection.RemoteAddr()
 }
 
-func (self *SshNewChannel) SetDeadline(t time.Time) error {
+func (self *newChannel) SetDeadline(t time.Time) error {
 	return self.specificInformationForConnection.SetDeadline(t)
 }
 
-func (self *SshNewChannel) SetReadDeadline(t time.Time) error {
+func (self *newChannel) SetReadDeadline(t time.Time) error {
 	return self.specificInformationForConnection.SetReadDeadline(t)
 }
 
-func (self *SshNewChannel) SetWriteDeadline(t time.Time) error {
+func (self *newChannel) SetWriteDeadline(t time.Time) error {
 	return self.specificInformationForConnection.SetWriteDeadline(t)
 }
 
-func (self *SshNewChannel) Accept(
+func (self *newChannel) Accept(
 	channelType string,
 	additionalData []byte,
-) (common.ISshChannel, <-chan *ssh.Request, error) {
-	accept, requests, err := self.newChannel.Accept()
+) (common.IChannel, <-chan *ssh.Request, error) {
+	accept, requests, err := self.sshNewChannel.Accept()
 	sshChannel, err := NewSshChannel(
 		channelType,
 		accept,
@@ -51,30 +51,30 @@ func (self *SshNewChannel) Accept(
 	return sshChannel, requests, err
 }
 
-func (self *SshNewChannel) Reject(reason ssh.RejectionReason, message string) error {
-	return self.newChannel.Reject(reason, message)
+func (self *newChannel) Reject(reason ssh.RejectionReason, message string) error {
+	return self.sshNewChannel.Reject(reason, message)
 }
 
-func (self *SshNewChannel) ChannelType() string {
-	return self.newChannel.ChannelType()
+func (self *newChannel) ChannelType() string {
+	return self.sshNewChannel.ChannelType()
 }
 
-func (self *SshNewChannel) ExtraData() []byte {
-	return self.newChannel.ExtraData()
+func (self *newChannel) ExtraData() []byte {
+	return self.sshNewChannel.ExtraData()
 }
 
 func NewSshNewChannel(
-	newChannel ssh.NewChannel,
+	sshNewChannel ssh.NewChannel,
 	specificInformationForConnection goCommsDefinitions.ISpecificInformationForConnection,
-) (common.ISshNewChannel, error) {
-	if newChannel == nil {
+) (common.INewChannel, error) {
+	if sshNewChannel == nil {
 		return nil, goerrors.InvalidParam
 	}
 	if specificInformationForConnection == nil {
 		return nil, goerrors.InvalidParam
 	}
-	return &SshNewChannel{
-		newChannel:                       newChannel,
+	return &newChannel{
+		sshNewChannel:                    sshNewChannel,
 		specificInformationForConnection: specificInformationForConnection,
 	}, nil
 }

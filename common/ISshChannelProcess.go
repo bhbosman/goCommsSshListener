@@ -13,7 +13,7 @@ type ISetSize interface {
 	SetSize(cols int, rows int) error
 }
 
-type ISshChannelProcess interface {
+type IChannelProcess interface {
 	io.WriteCloser
 	ISetSize
 	RunHandler() error
@@ -39,12 +39,12 @@ type ISettings interface {
 type ISshChannelSessionSettings interface {
 	ISettings
 	CreateChannelProcess(
-		sshChannel ISshChannel,
+		sshChannel IChannel,
 		parentCtx context.Context,
 		parentCancelFunc context.CancelFunc,
 		onSend goprotoextra.ToConnectionFunc,
 		onSendReplacement rxgo.NextFunc,
 		logger *zap.Logger,
-	) (ISshChannelProcess, error)
+	) (IChannelProcess, error)
 	UseDefault() (SshBuildInChannelProcess, error)
 }

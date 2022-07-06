@@ -16,7 +16,7 @@ type echoShellProcess struct {
 }
 
 func newEchoShellProcess(
-	sshChannel common.ISshChannel,
+	sshChannel common.IChannel,
 	parentCtx context.Context,
 	parentCancelFunc context.CancelFunc,
 	onSend goprotoextra.ToConnectionFunc,

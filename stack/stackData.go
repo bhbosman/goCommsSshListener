@@ -43,7 +43,7 @@ type data struct {
 	connectionManager   goConnectionManager.IService
 	uniqueSessionNumber interfaces.IUniqueReferenceService
 	connectionReactor   internal.ISshConnectionReactor
-	SshChannelSettings  common2.ISshChannelSettings
+	sshChannelSettings  common2.ISshChannelSettings
 	goFunctionCounter   GoFunctionCounter.IService
 }
 
@@ -186,7 +186,7 @@ func (self *data) handleChannelsAndRequest(
 			fx.Provide(
 				fx.Annotated{
 					Target: func() common2.ISshChannelSettings {
-						return self.SshChannelSettings
+						return self.sshChannelSettings
 					},
 				},
 			),
@@ -318,7 +318,7 @@ func NewStackData(
 		connectionManager:   ConnectionManager,
 		uniqueSessionNumber: uniqueSessionNumber,
 		connectionReactor:   connectionReactor,
-		SshChannelSettings:  SshChannelSettings,
+		sshChannelSettings:  SshChannelSettings,
 		goFunctionCounter:   goFunctionCounter,
 	}
 }

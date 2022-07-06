@@ -52,7 +52,7 @@ func (self *InboundStackHandler) OnError(err error) {
 }
 
 func (self *InboundStackHandler) NextReadWriterSize(
-	size goprotoextra.ReadWriterSize,
+	rws goprotoextra.ReadWriterSize,
 	_ func(rws goprotoextra.ReadWriterSize) error,
 	_ func(interface{}) error,
 	_ func(size int) error) error {
@@ -60,7 +60,7 @@ func (self *InboundStackHandler) NextReadWriterSize(
 	if self.errorState != nil {
 		return self.errorState
 	}
-	self.SendRws(size)
+	self.SendRws(rws)
 	return self.errorState
 }
 

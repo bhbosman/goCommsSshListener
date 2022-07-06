@@ -12,8 +12,8 @@ import (
 
 type iChannelListener interface {
 	io.Closer
-	Accept() (common.ISshNewChannel, error)
-	Addr() net.Addr
+	accept() (common.INewChannel, error)
+	addr() net.Addr
 }
 
 type channelListener struct {
@@ -21,11 +21,11 @@ type channelListener struct {
 	cancelFunc     context.CancelFunc
 	channel        <-chan ssh.NewChannel
 	Url            *url2.URL
-	addr           net.Addr
+	address        net.Addr
 	connectionInfo goCommsDefinitions.ISpecificInformationForConnection
 }
 
-func (self *channelListener) Accept() (common.ISshNewChannel, error) {
+func (self *channelListener) accept() (common.INewChannel, error) {
 	select {
 	case ch, ok := <-self.channel:
 		if ok {
@@ -43,8 +43,8 @@ func (self *channelListener) Close() error {
 	return nil
 }
 
-func (self *channelListener) Addr() net.Addr {
-	return self.addr
+func (self *channelListener) addr() net.Addr {
+	return self.address
 }
 
 func newChannelListener(
@@ -59,7 +59,7 @@ func newChannelListener(
 		cancelFunc:    cancelFunc,
 		channel:       channel,
 		Url:           Url,
-		addr: &sshChannelAddress{
+		address: &sshChannelAddress{
 			path: Url,
 		},
 		connectionInfo: SpecificInformationForConnection,

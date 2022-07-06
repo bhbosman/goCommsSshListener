@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsStacks/bottom"
-	"github.com/bhbosman/goCommsStacks/top"
+	"github.com/bhbosman/goCommsStacks/topStack"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/common"
@@ -34,7 +34,7 @@ func NewManagerApp(
 				resultCancelFunc := func() {
 					cancelFunc()
 				}
-				netListenSettings := &sshChannelListenerManagerSettings{
+				netListenSettings := &channelListenerManagerSettings{
 					NetManagerSettings:    common.NewNetManagerSettings(512),
 					userContext:           nil,
 					netListenerFactory:    provideCreateListenResource,
@@ -43,12 +43,11 @@ func NewManagerApp(
 				netListenSettings.AddFxOptionsForConnectionInstance(
 					[]fx.Option{
 						goCommsDefinitions.ProvideTransportFactoryForEmptyName(
-							top.ProvideTopStack(),
+							topStack.ProvideTopStack(),
 							bottom.Provide(),
 						),
 						goCommsDefinitions.ProvideTransportFactoryForSshChannelSession(
-							top.ProvideTopStack(),
-							//session.ProvideSshSessionProtocolStack(),
+							topStack.ProvideTopStack(),
 							bottom.Provide(),
 						),
 					},
@@ -58,7 +57,7 @@ func NewManagerApp(
 					if setting == nil {
 						continue
 					}
-					if listenAppSettingsApply, ok := setting.(ISshListenAppSettingsApply); ok {
+					if listenAppSettingsApply, ok := setting.(iListenAppSettingsApply); ok {
 						err := listenAppSettingsApply.apply(netListenSettings)
 						if err != nil {
 							return nil, resultCancelFunc, err
@@ -76,10 +75,12 @@ func NewManagerApp(
 					return nil, nil, err
 				}
 
-				sshUrl, err := url.Parse(urlAsString)
+				var sshUrl *url.URL
+				sshUrl, err = url.Parse(urlAsString)
 				if err != nil {
 					return nil, nil, err
 				}
+
 				options := common.ConnectionApp(
 					time.Hour,
 					time.Hour,
@@ -97,20 +98,9 @@ func NewManagerApp(
 					fx.Provide(fx.Annotated{Target: netListenSettings.OnCreateConnectionFactory}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.listenerAcceptFactory}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.netListenerFactory}),
-					fx.Provide(
-						fx.Annotated{
-							Target: func() (goCommsDefinitions.ISpecificInformationForConnection, error) {
-								return conn, nil
-							},
-						},
-					),
-					fx.Provide(
-						fx.Annotated{
-							Target: func() (<-chan ssh.NewChannel, error) {
-								return channels, nil
-							},
-						}),
-					fx.Invoke(sshInvokeListenForNewConnections),
+					provideISpecificInformationForConnection(conn),
+					provideNewChannelChannel(channels),
+					invokeListenForNewConnections(),
 				)
 				fxApp := fx.New(options)
 				return fxApp, resultCancelFunc, fxApp.Err()

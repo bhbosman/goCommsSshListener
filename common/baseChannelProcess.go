@@ -13,32 +13,10 @@ import (
 type BaseChannelProcess struct {
 	CancelCtx      context.Context
 	CancelFunc     context.CancelFunc
-	SshChannel     ISshChannel
+	SshChannel     IChannel
 	RwProxy        io.ReadWriteCloser
 	PipeWriteClose io.WriteCloser
 	Terminfo       *terminfo.Terminfo
-}
-
-func NewBaseChannelProcess(
-	sshChannel ISshChannel,
-	parentCtx context.Context,
-	parentCancelFunc context.CancelFunc,
-	onSend goprotoextra.ToConnectionFunc,
-	onSendReplacement rxgo.NextFunc,
-) BaseChannelProcess {
-	tempPipeReadClose, tempPipeWriteClose := common.Pipe(parentCtx)
-	rwProxy := &ReaderWriterProxy{
-		PipeReader:        tempPipeReadClose,
-		OnSend:            onSend,
-		onSendReplacement: onSendReplacement,
-	}
-	return BaseChannelProcess{
-		CancelCtx:      parentCtx,
-		CancelFunc:     parentCancelFunc,
-		SshChannel:     sshChannel,
-		RwProxy:        rwProxy,
-		PipeWriteClose: tempPipeWriteClose,
-	}
 }
 
 func (self *BaseChannelProcess) SetLookupTerminfo(terminfo *terminfo.Terminfo) error {
@@ -59,4 +37,26 @@ func (self *BaseChannelProcess) Close() error {
 		err = multierr.Append(err, self.RwProxy.Close())
 	}
 	return err
+}
+
+func NewBaseChannelProcess(
+	sshChannel IChannel,
+	parentCtx context.Context,
+	parentCancelFunc context.CancelFunc,
+	onSend goprotoextra.ToConnectionFunc,
+	onSendReplacement rxgo.NextFunc,
+) BaseChannelProcess {
+	tempPipeReadClose, tempPipeWriteClose := common.Pipe(parentCtx)
+	rwProxy := &ReaderWriterProxy{
+		PipeReader:        tempPipeReadClose,
+		OnSend:            onSend,
+		onSendReplacement: onSendReplacement,
+	}
+	return BaseChannelProcess{
+		CancelCtx:      parentCtx,
+		CancelFunc:     parentCancelFunc,
+		SshChannel:     sshChannel,
+		RwProxy:        rwProxy,
+		PipeWriteClose: tempPipeWriteClose,
+	}
 }

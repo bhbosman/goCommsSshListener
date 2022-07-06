@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func ProvideConnectionReactorFactory() fx.Option {
+func ProvideConnectionReactor() fx.Option {
 	return fx.Provide(
 		fx.Annotated{
 			Target: func(

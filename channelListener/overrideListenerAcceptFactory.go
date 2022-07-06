@@ -6,19 +6,19 @@ import (
 )
 
 type sshChannelListenerOverrideListenerAcceptFactory struct {
-	listenerAcceptFactory func(listener net.Listener) (ISshListenerAccept, error)
+	listenerAcceptFactory func(listener net.Listener) (iListenerAccept, error)
 }
 
 func (self *sshChannelListenerOverrideListenerAcceptFactory) ApplyNetManagerSettings(settings *common.NetManagerSettings) error {
 	return nil
 }
 
-func (self *sshChannelListenerOverrideListenerAcceptFactory) apply(settings *sshChannelListenerManagerSettings) error {
+func (self *sshChannelListenerOverrideListenerAcceptFactory) apply(settings *channelListenerManagerSettings) error {
 	settings.setListenerAcceptFactory(self.listenerAcceptFactory)
 	return nil
 }
 
-func newSshOverrideListenerAcceptFactory(listenerAcceptFactory func(listener net.Listener) (ISshListenerAccept, error)) *sshChannelListenerOverrideListenerAcceptFactory {
+func newSshOverrideListenerAcceptFactory(listenerAcceptFactory func(listener net.Listener) (iListenerAccept, error)) *sshChannelListenerOverrideListenerAcceptFactory {
 	return &sshChannelListenerOverrideListenerAcceptFactory{
 		listenerAcceptFactory: listenerAcceptFactory,
 	}
