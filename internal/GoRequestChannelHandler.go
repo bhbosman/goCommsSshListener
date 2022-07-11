@@ -15,36 +15,27 @@ func GoRequestChannelHandler(
 	ToReactorFunc goprotoextra.ToReactorFunc,
 	goFunctionCounter GoFunctionCounter.IService,
 ) error {
-	// this function is part of the GoFunctionCounter count
-	go func(
-		cancelContext context.Context,
-		requestChannel <-chan *ssh.Request,
-		ToReactorFunc goprotoextra.ToReactorFunc,
-	) {
-		functionName := goFunctionCounter.CreateFunctionName(fmt.Sprintf("GoRequestChannelHandler.%v", name))
-		defer func(GoFunctionCounter GoFunctionCounter.IService, name string) {
-			_ = GoFunctionCounter.Remove(name)
-		}(goFunctionCounter, functionName)
-		_ = goFunctionCounter.Add(functionName)
-
-		//
-	loop:
-		for {
-			select {
-			case <-cancelContext.Done():
-				break loop
-			case request, ok := <-requestChannel:
-				if !ok {
+	return goFunctionCounter.GoRun(
+		fmt.Sprintf("GoRequestChannelHandler.%v", name),
+		func(_ interface{}) {
+		loop:
+			for {
+				select {
+				case <-cancelContext.Done():
 					break loop
-				}
-				if request != nil {
-					_ = ToReactorFunc(true, request)
+				case request, ok := <-requestChannel:
+					if !ok {
+						break loop
+					}
+					if request != nil {
+						_ = ToReactorFunc(true, request)
+					}
 				}
 			}
-		}
-		// run channel empty
-		for range requestChannel {
-		}
-	}(cancelContext, requestChannel, ToReactorFunc)
-	return nil
+			// run channel empty
+			for range requestChannel {
+			}
+		},
+		nil,
+	)
 }

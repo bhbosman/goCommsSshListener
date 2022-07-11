@@ -39,26 +39,21 @@ func newEchoShellProcess(
 }
 
 func (self *echoShellProcess) RunHandler() error {
-	// this function is part of the GoFunctionCounter count
-	go func() {
-		functionName := self.goFunctionCounter.CreateFunctionName("echoShellProcess.RunHandler")
-		defer func(GoFunctionCounter GoFunctionCounter.IService, name string) {
-			_ = GoFunctionCounter.Remove(name)
-		}(self.goFunctionCounter, functionName)
-		_ = self.goFunctionCounter.Add(functionName)
+	return self.goFunctionCounter.GoRun("echoShellProcess.RunHandler",
+		func(_ interface{}) {
+			for self.CancelCtx.Err() == nil {
+				line, err := self.handler.ReadLine()
+				if err != nil {
+					self.CancelFunc()
+				}
+				if line != "" {
+				}
+			}
+			_ = self.SshChannel.Close()
+		},
+		nil,
+	)
 
-		//
-		for self.CancelCtx.Err() == nil {
-			line, err := self.handler.ReadLine()
-			if err != nil {
-				self.CancelFunc()
-			}
-			if line != "" {
-			}
-		}
-		_ = self.SshChannel.Close()
-	}()
-	return nil
 }
 
 func (self *echoShellProcess) SetSize(cols int, rows int) error {

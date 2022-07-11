@@ -89,7 +89,7 @@ func NewManagerApp(
 					false,
 					nil,
 					sshUrl,
-					goCommsDefinitions.TransportFactoryEmptyName,
+					//goCommsDefinitions.TransportFactoryEmptyName,
 					params,
 					callbackForConnectionInstance,
 					fx.Options(netListenSettings.MoreOptions...),

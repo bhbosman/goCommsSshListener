@@ -66,7 +66,7 @@ func NewSshListenApp(
 		useProxy,
 		proxyUrl,
 		connectionUrl,
-		goCommsDefinitions.TransportFactoryOnlySSHStack,
+		//goCommsDefinitions.TransportFactoryOnlySSHStack,
 		settings...,
 	)
 	return f

@@ -49,36 +49,31 @@ func newDefaultChannelProcess(
 }
 
 func (self *defaultChannelProcess) RunHandler() error {
-	// this function is part of the GoFunctionCounter count
-	go func() {
-		functionName := self.goFunctionCounter.CreateFunctionName("defaultChannelProcess.RunHandler")
-		defer func(GoFunctionCounter GoFunctionCounter.IService, name string) {
-			_ = GoFunctionCounter.Remove(name)
-		}(self.goFunctionCounter, functionName)
-		_ = self.goFunctionCounter.Add(functionName)
+	return self.goFunctionCounter.GoRun(
+		"defaultChannelProcess.RunHandler",
+		func(_ interface{}) {
+		loop:
+			for {
+				select {
+				case <-self.timeOutCancelContext.Done():
+					var errList error
+					_, err := self.sshChannel.Stderr().Write([]byte("could not start remote process\n\r"))
+					errList = multierr.Append(errList, err)
 
-		//
-	loop:
-		for {
-			select {
-			case <-self.timeOutCancelContext.Done():
-				var errList error
-				_, err := self.sshChannel.Stderr().Write([]byte("could not start remote process\n\r"))
-				errList = multierr.Append(errList, err)
-
-				errList = multierr.Append(errList, self.sshChannel.Close())
-				if errList != nil {
-					// logging
+					errList = multierr.Append(errList, self.sshChannel.Close())
+					if errList != nil {
+						// logging
+					}
+					self.parentCancelFunc()
+					break loop
+				case <-self.closeCancelContext.Done():
+					break loop
 				}
-				self.parentCancelFunc()
-				break loop
-			case <-self.closeCancelContext.Done():
-				break loop
 			}
-		}
-		self.timeOutCancelFunc()
-	}()
-	return nil
+			self.timeOutCancelFunc()
+		},
+		nil,
+	)
 }
 
 func (self *defaultChannelProcess) Write(p []byte) (n int, err error) {

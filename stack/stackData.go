@@ -214,18 +214,14 @@ func (self *data) handleChannelsAndRequest(
 		return err
 	}
 
-	// this function is part of the GoFunctionCounter count
-	go func() {
-		functionName := self.goFunctionCounter.CreateFunctionName("SSHStackData.handleChannelsAndRequest")
-		defer func(GoFunctionCounter GoFunctionCounter.IService, name string) {
-			_ = GoFunctionCounter.Remove(name)
-		}(self.goFunctionCounter, functionName)
-		_ = self.goFunctionCounter.Add(functionName)
-
-		<-callback.Done()
-		_ = callback.Stop(context.Background())
-	}()
-	return nil
+	return self.goFunctionCounter.GoRun(
+		"SSHStackData.handleChannelsAndRequest",
+		func(_ interface{}) {
+			<-callback.Done()
+			_ = callback.Stop(context.Background())
+		},
+		nil,
+	)
 }
 
 func (self *data) setOnOutBoundSendData(onData rxgo.NextFunc) error {
