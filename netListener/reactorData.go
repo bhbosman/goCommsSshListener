@@ -31,6 +31,7 @@ func (self *Data) RemoveAcceptedChannel(uniqueReference string) error {
 func (self *Data) HandleGlobalRequest(name string, req *ssh.Request) error {
 	return nil
 }
+
 func (self *Data) CanAcceptChannel(name string) (bool, ssh.RejectionReason, string, error) {
 	return true, 0, "", nil
 }

@@ -52,7 +52,7 @@ func (self *sshConnectionReactor) Init(
 	toConnectionReactor goprotoextra.ToReactorFunc,
 	toConnectionFuncReplacement rxgo.NextFunc,
 	toConnectionReactorReplacement rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, chan interface{}, error) {
 	self.onSend = onSend
 	self.toConnectionReactor = toConnectionReactor
 	self.toConnectionReactorReplacement = toConnectionReactorReplacement
@@ -65,7 +65,7 @@ func (self *sshConnectionReactor) Init(
 		},
 		func() {
 
-		}, nil
+		}, nil, nil
 }
 
 func (self *sshConnectionReactor) Open() error {

@@ -17,7 +17,7 @@ func GoRequestChannelHandler(
 ) error {
 	return goFunctionCounter.GoRun(
 		fmt.Sprintf("GoRequestChannelHandler.%v", name),
-		func(_ interface{}) {
+		func() {
 		loop:
 			for {
 				select {
@@ -36,6 +36,5 @@ func GoRequestChannelHandler(
 			for range requestChannel {
 			}
 		},
-		nil,
 	)
 }

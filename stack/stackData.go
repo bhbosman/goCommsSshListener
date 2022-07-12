@@ -216,11 +216,10 @@ func (self *data) handleChannelsAndRequest(
 
 	return self.goFunctionCounter.GoRun(
 		"SSHStackData.handleChannelsAndRequest",
-		func(_ interface{}) {
+		func() {
 			<-callback.Done()
 			_ = callback.Stop(context.Background())
 		},
-		nil,
 	)
 }
 

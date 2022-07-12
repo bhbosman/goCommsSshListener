@@ -161,7 +161,7 @@ func (self *reactor) Init(
 	toConnectionReactor goprotoextra.ToReactorFunc,
 	toConnectionFuncReplacement rxgo.NextFunc,
 	toConnectionReactorReplacement rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, chan interface{}, error) {
 	self.toConnectionReactor = toConnectionReactor
 	self.onSend = onSend
 	self.toConnectionFuncReplacement = toConnectionFuncReplacement
@@ -175,7 +175,7 @@ func (self *reactor) Init(
 		},
 		func() {
 
-		}, nil
+		}, nil, nil
 }
 
 func (self *reactor) Open() error {

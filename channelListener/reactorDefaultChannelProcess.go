@@ -51,7 +51,7 @@ func newDefaultChannelProcess(
 func (self *defaultChannelProcess) RunHandler() error {
 	return self.goFunctionCounter.GoRun(
 		"defaultChannelProcess.RunHandler",
-		func(_ interface{}) {
+		func() {
 		loop:
 			for {
 				select {
@@ -72,7 +72,6 @@ func (self *defaultChannelProcess) RunHandler() error {
 			}
 			self.timeOutCancelFunc()
 		},
-		nil,
 	)
 }
 

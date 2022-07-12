@@ -69,8 +69,8 @@ func (self *service) CanAcceptChannel(name string) (bool, ssh.RejectionReason, s
 	return request.Args0, request.Args1, request.Args2, request.Args3
 }
 
-func (self *service) OnStart(ctx context.Context) error {
-	err := self.start(ctx)
+func (self *service) OnStart(_ context.Context) error {
+	err := self.start()
 	if err != nil {
 		return err
 	}
@@ -78,8 +78,8 @@ func (self *service) OnStart(ctx context.Context) error {
 	return nil
 }
 
-func (self *service) OnStop(ctx context.Context) error {
-	err := self.shutdown(ctx)
+func (self *service) OnStop(_ context.Context) error {
+	err := self.shutdown()
 	close(self.cmdChannel)
 	self.state = IFxService.Stopped
 	return err
@@ -93,7 +93,7 @@ func (self *service) ServiceName() string {
 	return "ConnectionReactorMessageHandler"
 }
 
-func (self *service) start(ctx context.Context) error {
+func (self *service) start() error {
 	data, err := self.onData()
 	if err != nil {
 		return err
@@ -101,9 +101,10 @@ func (self *service) start(ctx context.Context) error {
 
 	return self.goFunctionCounter.GoRun(
 		"IConnectionReactorMessageQueueService.Start",
-		func(_ interface{}) {
+		func() {
 			self.goStart(data)
-		}, nil)
+		},
+	)
 }
 
 func (self *service) goStart(data IConnectionReactorMessageQueueData) {
@@ -117,7 +118,6 @@ func (self *service) goStart(data IConnectionReactorMessageQueueData) {
 		data,
 		[]ChannelHandler.ChannelHandler{
 			{
-				//BreakOnSuccess: false,
 				Cb: func(next interface{}, message interface{}) (bool, error) {
 					if unk, ok := next.(IConnectionReactorMessageQueue); ok {
 						return ChannelEventsForIConnectionReactorMessageQueue(unk, message)
@@ -126,7 +126,6 @@ func (self *service) goStart(data IConnectionReactorMessageQueueData) {
 				},
 			},
 			{
-				//BreakOnSuccess: false,
 				Cb: func(next interface{}, message interface{}) (bool, error) {
 					if unk, ok := next.(ISendMessage.ISendMessage); ok {
 						return ISendMessage.ChannelEventsForISendMessage(unk, message)
@@ -161,7 +160,7 @@ loop:
 	}
 }
 
-func (self *service) shutdown(ctx context.Context) error {
+func (self *service) shutdown() error {
 	self.cancelFunc()
 	return nil
 }

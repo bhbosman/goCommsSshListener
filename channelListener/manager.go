@@ -40,7 +40,7 @@ func (self *manager) ListenForNewConnections() error {
 	}
 	return self.GoFunctionCounter.GoRun(
 		"SshChannelListenerManager.ListenForNewConnections.Accept",
-		func(_ interface{}) {
+		func() {
 			n := 0
 			sem := semaphore.NewWeighted(int64(self.MaxConnections))
 		loop:
@@ -107,11 +107,11 @@ func (self *manager) ListenForNewConnections() error {
 								err = multierr.Append(err, acceptedChannel.Close())
 								err = multierr.Append(err, self.GoFunctionCounter.GoRun(
 									"SshChannelListenerManager.ListenForNewConnections.Flush.AcceptedChannelRequestChannel",
-									func(_ interface{}) {
+									func() {
 										for range acceptedChannelRequestChannel {
 										}
 									},
-									nil),
+								),
 								)
 
 								if err != nil {
@@ -191,7 +191,7 @@ func (self *manager) ListenForNewConnections() error {
 
 					self.GoFunctionCounter.GoRun(
 						"SshChannelListenerManager.ListenForNewConnections.WaitForConnection.Done",
-						func(_ interface{}) {
+						func() {
 							//
 							<-connectionAppCtx.Done()
 							var errList error
@@ -207,7 +207,6 @@ func (self *manager) ListenForNewConnections() error {
 								connCancelFunc()
 							}
 						},
-						nil,
 					)
 					// this function is part of the GoFunctionCounter count
 					continue loop
@@ -221,7 +220,6 @@ func (self *manager) ListenForNewConnections() error {
 			}
 			self.ZapLogger.Info("Leaving accept loop")
 		},
-		nil,
 	)
 }
 

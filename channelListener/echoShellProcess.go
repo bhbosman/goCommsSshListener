@@ -41,7 +41,7 @@ func newEchoShellProcess(
 func (self *echoShellProcess) RunHandler() error {
 	return self.goFunctionCounter.GoRun(
 		"echoShellProcess.RunHandler",
-		func(_ interface{}) {
+		func() {
 			for self.CancelCtx.Err() == nil {
 				line, err := self.handler.ReadLine()
 				if err != nil {
@@ -52,7 +52,6 @@ func (self *echoShellProcess) RunHandler() error {
 			}
 			_ = self.SshChannel.Close()
 		},
-		nil,
 	)
 
 }
