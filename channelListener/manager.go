@@ -191,7 +191,7 @@ func (self *manager) ListenForNewConnections() error {
 
 					self.GoFunctionCounter.GoRun(
 						"SshChannelListenerManager.ListenForNewConnections.WaitForConnection.Done",
-						func(data interface{}) {
+						func(_ interface{}) {
 							//
 							<-connectionAppCtx.Done()
 							var errList error

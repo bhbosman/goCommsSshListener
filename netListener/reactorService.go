@@ -99,19 +99,11 @@ func (self *service) start(ctx context.Context) error {
 		return err
 	}
 
-	// this function is part of the GoFunctionCounter count
-	go func() {
-		functionName := self.goFunctionCounter.CreateFunctionName("IConnectionReactorMessageQueueService.Start")
-		defer func(GoFunctionCounter GoFunctionCounter.IService, name string) {
-			_ = GoFunctionCounter.Remove(name)
-		}(self.goFunctionCounter, functionName)
-		_ = self.goFunctionCounter.Add(functionName)
-
-		//
-		self.goStart(data)
-	}()
-
-	return nil
+	return self.goFunctionCounter.GoRun(
+		"IConnectionReactorMessageQueueService.Start",
+		func(_ interface{}) {
+			self.goStart(data)
+		}, nil)
 }
 
 func (self *service) goStart(data IConnectionReactorMessageQueueData) {

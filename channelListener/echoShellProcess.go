@@ -39,7 +39,8 @@ func newEchoShellProcess(
 }
 
 func (self *echoShellProcess) RunHandler() error {
-	return self.goFunctionCounter.GoRun("echoShellProcess.RunHandler",
+	return self.goFunctionCounter.GoRun(
+		"echoShellProcess.RunHandler",
 		func(_ interface{}) {
 			for self.CancelCtx.Err() == nil {
 				line, err := self.handler.ReadLine()
