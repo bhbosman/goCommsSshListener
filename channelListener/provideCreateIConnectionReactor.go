@@ -25,9 +25,9 @@ func provideCreateIConnectionReactor() fx.Option {
 					SshChannelSettings   common.ISshChannelSettings `optional:"true"`
 					SshChannel           common.IChannel
 					GoFunctionCounter    GoFunctionCounter.IService
-					ExtraData            []byte      `name:"ChannelExtraData"`
-					ClientContext        interface{} `name:"UserContext"`
-					ChannelType          string      `name:"ChannelType"`
+					ExtraData            []byte `name:"ChannelExtraData"`
+					//ClientContext        interface{} `name:"UserContext"`
+					ChannelType string `name:"ChannelType"`
 				},
 			) (intf.IConnectionReactor, error) {
 				params.Logger.Info("Creating Connection reactor")

@@ -19,8 +19,8 @@ func ProvideConnectionReactor() fx.Option {
 					CancelFunc           context.CancelFunc
 					ConnectionCancelFunc model.ConnectionCancelFunc
 					Logger               *zap.Logger
-					ClientContext        interface{} `name:"UserContext"`
-					GoFunctionCounter    GoFunctionCounter.IService
+					//ClientContext        interface{} `name:"UserContext"`
+					GoFunctionCounter GoFunctionCounter.IService
 				},
 			) (intf.IConnectionReactor, error) {
 				return NewSshConnectionReactor(
@@ -28,7 +28,7 @@ func ProvideConnectionReactor() fx.Option {
 					params.CancelFunc,
 					params.ConnectionCancelFunc,
 					params.Logger,
-					params.ClientContext,
+					//params.ClientContext,
 					params.GoFunctionCounter,
 				)
 			},

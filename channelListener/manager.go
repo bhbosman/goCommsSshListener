@@ -2,7 +2,6 @@ package channelListener
 
 import (
 	"context"
-	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/goConnectionManager"
@@ -23,7 +22,6 @@ type manager struct {
 	netBase.ConnNetManager
 	listener           iListenerAccept
 	MaxConnections     int
-	OnCreateConnection goCommsDefinitions.IOnCreateConnection
 	ConnectionReactor  internal.ISshConnectionReactor
 	SshChannelSettings common.ISshChannelSettings
 }
@@ -55,7 +53,7 @@ func (self *manager) ListenForNewConnections() error {
 					self.ZapLogger.Error(
 						"Error on accept",
 						zap.Error(err))
-					continue loop
+					break loop
 				}
 
 				if sem.TryAcquire(1) {
@@ -98,33 +96,43 @@ func (self *manager) ListenForNewConnections() error {
 						continue loop
 					}
 
-					onErrorFlush := func() func(err error) {
+					onErrorFlush := func() func() error {
 						called := false
-						return func(err error) {
+						return func() error {
 							if !called {
 								called = true
 								connCancelFunc()
-								err = multierr.Append(err, acceptedChannel.Close())
-								err = multierr.Append(err, self.GoFunctionCounter.GoRun(
-									"SshChannelListenerManager.ListenForNewConnections.Flush.AcceptedChannelRequestChannel",
-									func() {
-										for range acceptedChannelRequestChannel {
-										}
-									},
-								),
+								err := multierr.Append(err, acceptedChannel.Close())
+								err = multierr.Append(err,
+									self.GoFunctionCounter.GoRun(
+										"SshChannelListenerManager.ListenForNewConnections.Flush.AcceptedChannelRequestChannel",
+										func() {
+											for range acceptedChannelRequestChannel {
+											}
+										},
+									),
 								)
-
-								if err != nil {
-									self.ZapLogger.Error("OnErrorFlush", zap.Error(err))
-								}
+								self.ZapLogger.Error("OnErrorFlush", zap.Error(err))
+								return err
 							}
+							return nil
 						}
 					}()
 
 					acceptedChannel = newSshChannelWithSemaphoreWrapper(acceptedChannel, sem)
 
 					uniqueReference := self.UniqueSessionNumber.Next(self.ConnectionInstancePrefix)
-					connectionApp, connectionAppCtx, connectionAppCtxCancelFunc := self.NewConnectionInstanceWithStackName(
+
+					connectionInstance := netBase.NewConnectionInstance(
+						self.ConnectionUrl,
+						self.UniqueSessionNumber,
+						self.ConnectionManager,
+						self.UserContext,
+						self.CancelCtx,
+						self.AdditionalFxOptionsForConnectionInstance,
+						self.ZapLogger,
+					)
+					connectionApp, connectionAppCtx, cancellationContext, err := connectionInstance.NewConnectionInstanceWithStackName(
 						uniqueReference,
 						self.GoFunctionCounter,
 						model.ServerConnection,
@@ -157,30 +165,25 @@ func (self *manager) ListenForNewConnections() error {
 							invokeRequestChannelHandler(),
 						),
 					)
-					err = connectionApp.Err()
 					if connectionAppCtx != nil {
 						err = multierr.Append(err, connectionAppCtx.Err())
 					}
+					onErr := func(error error) {
+						if cancellationContext != nil {
+							cancellationContext.Cancel()
+						}
+						err = multierr.Append(err, onErrorFlush())
+						err = multierr.Append(err, acceptedChannel.Close())
+						self.ZapLogger.Error("NewConnectionInstanceWithStackName", zap.Error(err))
+					}
 					if err != nil {
-						self.ZapLogger.Error(
-							"Error in fxApp.Err() when creating NewConnectionInstance()",
-							zap.Error(err))
-						onErrorFlush(err)
+						onErr(err)
 						continue loop
 					}
 
-					if self.OnCreateConnection != nil {
-						self.OnCreateConnection.OnCreateConnection(
-							uniqueReference,
-							connectionApp.Err(),
-							connectionAppCtx,
-							connectionAppCtxCancelFunc)
-					}
-
-					// TODO: Adhere to timeouts
 					err = connectionApp.Start(context.Background())
 					if err != nil {
-						onErrorFlush(err)
+						onErr(err)
 						continue loop
 					}
 
@@ -188,26 +191,28 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
+					_ = cancellationContext.Add(
+						func() func() {
+							b := false
+							return func() {
+								if !b {
+									b = true
+									var errList error
+									errList = self.ConnectionReactor.RemoveAcceptedChannel(uniqueReference)
+									// TODO: Adhere to timeouts
+									errList = multierr.Append(errList, connectionApp.Stop(context.Background()))
+									if errList != nil {
+										self.ZapLogger.Error(
+											"Stopping error. not really a problem. informational",
+											zap.Error(errList))
+									}
+									if connCancelFunc != nil {
+										connCancelFunc()
+									}
+								}
+							}
+						}())
 
-					self.GoFunctionCounter.GoRun(
-						"SshChannelListenerManager.ListenForNewConnections.WaitForConnection.Done",
-						func() {
-							//
-							<-connectionAppCtx.Done()
-							var errList error
-							errList = self.ConnectionReactor.RemoveAcceptedChannel(uniqueReference)
-							// TODO: Adhere to timeouts
-							errList = multierr.Append(errList, connectionApp.Stop(context.Background()))
-							if errList != nil {
-								self.ZapLogger.Error(
-									"Stopping error. not really a problem. informational",
-									zap.Error(errList))
-							}
-							if connCancelFunc != nil {
-								connCancelFunc()
-							}
-						},
-					)
 					// this function is part of the GoFunctionCounter count
 					continue loop
 				} else {
@@ -234,7 +239,6 @@ func NewManager(
 		ConnectionUrl                            *url.URL `name:"ConnectionUrl"`
 		ProxyUrl                                 *url.URL `name:"ProxyUrl"`
 		ListenerAccept                           iListenerAccept
-		OnCreateConnection                       goCommsDefinitions.IOnCreateConnection
 		ConnectionManager                        goConnectionManager.IService
 		CancelCtx                                context.Context
 		CancelFunction                           context.CancelFunc
@@ -264,7 +268,6 @@ func NewManager(
 		params.ProxyUrl,
 		params.ConnectionUrl,
 		params.CancelCtx,
-		params.CancelFunction,
 		params.ConnectionManager,
 		params.Settings.userContext,
 		params.ZapLogger,
@@ -282,7 +285,6 @@ func NewManager(
 		},
 		listener:           params.ListenerAccept,
 		MaxConnections:     params.Settings.MaxConnections,
-		OnCreateConnection: params.OnCreateConnection,
 		ConnectionReactor:  params.ConnectionReactor,
 		SshChannelSettings: params.SshChannelSettings,
 	}, nil

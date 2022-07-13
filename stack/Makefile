@@ -1,2 +1,2 @@
 resources:
-	go-bindata -pkg internal -nocompress ./DefaultCert ./DefaultCert.pub
+	go-bindata -pkg stack -nocompress ./defaultCert ./defaultCert.pub

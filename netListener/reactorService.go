@@ -6,7 +6,7 @@ import (
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/Services/ISendMessage"
-	"go.uber.org/fx"
+	"github.com/bhbosman/gocommon/messages"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
 )
@@ -31,7 +31,7 @@ func (self *service) Send(message interface{}) error {
 	return result.Args0
 }
 
-func (self *service) AddAcceptedChannel(uniqueReference string, acceptedChannel *fx.App) error {
+func (self *service) AddAcceptedChannel(uniqueReference string, acceptedChannel messages.IApp) error {
 	result, err := CallIConnectionReactorMessageQueueAddAcceptedChannel(
 		self.ctx, self.cmdChannel, true,
 		uniqueReference, acceptedChannel)

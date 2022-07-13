@@ -30,7 +30,7 @@ func NewManagerApp(
 			ServiceId:         serviceIdentifier,
 			ServiceDependency: serviceDependentOn,
 			Name:              name,
-			Callback: func() (*fx.App, context.CancelFunc, error) {
+			Callback: func() (messages.IApp, context.CancelFunc, error) {
 				resultCancelFunc := func() {
 					cancelFunc()
 				}
@@ -86,16 +86,14 @@ func NewManagerApp(
 					time.Hour,
 					name,
 					connectionInstancePrefix,
-					false,
-					nil,
-					sshUrl,
-					//goCommsDefinitions.TransportFactoryEmptyName,
 					params,
 					callbackForConnectionInstance,
 					fx.Options(netListenSettings.MoreOptions...),
 					fx.Supply(netListenSettings),
+					goCommsDefinitions.ProvideUrl("ConnectionUrl", sshUrl),
+					goCommsDefinitions.ProvideUrl("ProxyUrl", nil),
+					goCommsDefinitions.ProvideBool("UseProxy", false),
 					fx.Provide(fx.Annotated{Target: NewManager}),
-					fx.Provide(fx.Annotated{Target: netListenSettings.OnCreateConnectionFactory}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.listenerAcceptFactory}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.netListenerFactory}),
 					provideISpecificInformationForConnection(conn),

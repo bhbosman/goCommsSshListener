@@ -3,7 +3,6 @@ package netListener
 import (
 	"github.com/bhbosman/gocommon/messageRouter"
 	"github.com/bhbosman/gocommon/messages"
-	"go.uber.org/fx"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -20,7 +19,7 @@ func (self *Data) Send(message interface{}) error {
 	return nil
 }
 
-func (self *Data) AddAcceptedChannel(uniqueReference string, acceptedChannel *fx.App) error {
+func (self *Data) AddAcceptedChannel(uniqueReference string, acceptedChannel messages.IApp) error {
 	return nil
 }
 

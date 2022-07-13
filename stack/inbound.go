@@ -78,7 +78,7 @@ func Inbound(
 
 						rxOverride.ForEach(
 							goCommsDefinitions.SshStackName,
-							model.StreamDirectionUnknown,
+							model.StreamDirectionInbound,
 							obs,
 							ctx,
 							goFunctionCounter,

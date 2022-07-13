@@ -4,30 +4,30 @@ import (
 	"context"
 	internal2 "github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
+	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/goprotoextra"
 	"github.com/reactivex/rxgo/v2"
-	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
 	"sync/atomic"
 )
 
 type sshConnectionReactor struct {
-	openCloserCount                int64
-	onSend                         goprotoextra.ToConnectionFunc
-	toConnectionReactor            goprotoextra.ToReactorFunc
-	cancelCtx                      context.Context
-	cancelFunc                     context.CancelFunc
-	connectionCancelFunc           model.ConnectionCancelFunc
-	logger                         *zap.Logger
-	userContext                    interface{}
+	openCloserCount      int64
+	onSend               goprotoextra.ToConnectionFunc
+	toConnectionReactor  goprotoextra.ToReactorFunc
+	cancelCtx            context.Context
+	cancelFunc           context.CancelFunc
+	connectionCancelFunc model.ConnectionCancelFunc
+	logger               *zap.Logger
+	//userContext                    interface{}
 	messageHandlerService          IConnectionReactorMessageQueueService
 	toConnectionFuncReplacement    rxgo.NextFunc
 	toConnectionReactorReplacement rxgo.NextFunc
 }
 
-func (self *sshConnectionReactor) AddAcceptedChannel(uniqueReference string, acceptedChannel *fx.App) error {
+func (self *sshConnectionReactor) AddAcceptedChannel(uniqueReference string, acceptedChannel messages.IApp) error {
 	return self.messageHandlerService.AddAcceptedChannel(uniqueReference, acceptedChannel)
 }
 
@@ -81,7 +81,7 @@ func NewSshConnectionReactor(
 	cancelFunc context.CancelFunc,
 	connectionCancelFunc model.ConnectionCancelFunc,
 	logger *zap.Logger,
-	userContext interface{},
+	//userContext interface{},
 	goFunctionCounter GoFunctionCounter.IService,
 ) (internal2.ISshConnectionReactor, error) {
 
@@ -99,11 +99,11 @@ func NewSshConnectionReactor(
 	}
 
 	return &sshConnectionReactor{
-		cancelCtx:             cancelCtx,
-		cancelFunc:            cancelFunc,
-		connectionCancelFunc:  connectionCancelFunc,
-		logger:                logger,
-		userContext:           userContext,
+		cancelCtx:            cancelCtx,
+		cancelFunc:           cancelFunc,
+		connectionCancelFunc: connectionCancelFunc,
+		logger:               logger,
+		//userContext:           userContext,
 		messageHandlerService: messageHandlerService,
 	}, nil
 }

@@ -8,7 +8,7 @@ import (
 	"context"
 	fmt "fmt"
 	errors "github.com/bhbosman/gocommon/errors"
-	fx "go.uber.org/fx"
+	"github.com/bhbosman/gocommon/messages"
 	ssh "golang.org/x/crypto/ssh"
 )
 
@@ -18,7 +18,7 @@ import (
 // Interface IConnectionReactorMessageQueue, Method: AddAcceptedChannel
 type IConnectionReactorMessageQueueAddAcceptedChannelIn struct {
 	arg0 string
-	arg1 *fx.App
+	arg1 messages.IApp
 }
 
 type IConnectionReactorMessageQueueAddAcceptedChannelOut struct {
@@ -39,7 +39,7 @@ type IConnectionReactorMessageQueueAddAcceptedChannel struct {
 	outDataChannel chan IConnectionReactorMessageQueueAddAcceptedChannelOut
 }
 
-func NewIConnectionReactorMessageQueueAddAcceptedChannel(waitToComplete bool, arg0 string, arg1 *fx.App) *IConnectionReactorMessageQueueAddAcceptedChannel {
+func NewIConnectionReactorMessageQueueAddAcceptedChannel(waitToComplete bool, arg0 string, arg1 messages.IApp) *IConnectionReactorMessageQueueAddAcceptedChannel {
 	var outDataChannel chan IConnectionReactorMessageQueueAddAcceptedChannelOut
 	if waitToComplete {
 		outDataChannel = make(chan IConnectionReactorMessageQueueAddAcceptedChannelOut)
@@ -77,7 +77,7 @@ func (self *IConnectionReactorMessageQueueAddAcceptedChannel) Close() error {
 	close(self.outDataChannel)
 	return nil
 }
-func CallIConnectionReactorMessageQueueAddAcceptedChannel(context context.Context, channel chan<- interface{}, waitToComplete bool, arg0 string, arg1 *fx.App) (IConnectionReactorMessageQueueAddAcceptedChannelOut, error) {
+func CallIConnectionReactorMessageQueueAddAcceptedChannel(context context.Context, channel chan<- interface{}, waitToComplete bool, arg0 string, arg1 messages.IApp) (IConnectionReactorMessageQueueAddAcceptedChannelOut, error) {
 	if context != nil && context.Err() != nil {
 		return IConnectionReactorMessageQueueAddAcceptedChannelOut{}, context.Err()
 	}

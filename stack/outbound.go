@@ -95,7 +95,7 @@ func Outbound(
 
 						rxOverride.ForEach(
 							goCommsDefinitions.SshStackName,
-							model.StreamDirectionUnknown,
+							model.StreamDirectionOutbound,
 							obs,
 							ctx,
 							goFunctionCounter,
