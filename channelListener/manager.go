@@ -212,8 +212,6 @@ func (self *manager) ListenForNewConnections() error {
 								}
 							}
 						}())
-
-					// this function is part of the GoFunctionCounter count
 					continue loop
 				} else {
 					err = acceptNewChannel.Reject(ssh.ResourceShortage, "")
