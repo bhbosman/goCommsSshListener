@@ -32,13 +32,16 @@ func (self *service) Send(message interface{}) error {
 }
 
 func (self *service) AddAcceptedChannel(uniqueReference string, acceptedChannel messages.IApp) error {
-	result, err := CallIConnectionReactorMessageQueueAddAcceptedChannel(
-		self.ctx, self.cmdChannel, true,
-		uniqueReference, acceptedChannel)
-	if err != nil {
-		return err
+	if self.state == IFxService.Started {
+		result, err := CallIConnectionReactorMessageQueueAddAcceptedChannel(
+			self.ctx, self.cmdChannel, true,
+			uniqueReference, acceptedChannel)
+		if err != nil {
+			return err
+		}
+		return result.Args0
 	}
-	return result.Args0
+	return nil
 }
 
 func (self *service) RemoveAcceptedChannel(uniqueReference string) error {
@@ -136,7 +139,8 @@ func (self *service) goStart(data IConnectionReactorMessageQueueData) {
 		},
 		func() int {
 			return len(self.cmdChannel)
-		})
+		},
+	)
 loop:
 	for {
 		select {

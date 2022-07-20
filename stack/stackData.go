@@ -14,7 +14,6 @@ import (
 	"github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/goerrors"
 	"github.com/bhbosman/goprotoextra"
-	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/fx"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
@@ -31,12 +30,6 @@ type data struct {
 	ctx                 context.Context
 	cancelFunc          context.CancelFunc
 	logger              *zap.Logger
-	onInBoundSendData   rxgo.NextFunc
-	onInBoundSendError  rxgo.ErrFunc
-	onInBoundComplete   rxgo.CompletedFunc
-	onOutBoundSendData  rxgo.NextFunc
-	onOutBoundSendError rxgo.ErrFunc
-	onOutBoundComplete  rxgo.CompletedFunc
 	pipeWriteClose      io.WriteCloser
 	pipeRead            io.ReadCloser
 	connWrapper         *common.ConnWrapper
@@ -45,6 +38,8 @@ type data struct {
 	connectionReactor   internal.ISshConnectionReactor
 	sshChannelSettings  common2.ISshChannelSettings
 	goFunctionCounter   GoFunctionCounter.IService
+	outBoundHandler     goCommsDefinitions.IRxNextHandler
+	inBoundHandler      goCommsDefinitions.IRxNextHandler
 }
 
 func (self *data) Close() error {
@@ -223,68 +218,18 @@ func (self *data) handleChannelsAndRequest(
 	)
 }
 
-func (self *data) setOnOutBoundSendData(onData rxgo.NextFunc) error {
-	if onData == nil {
-		return goerrors.InvalidParam
-	}
-	self.onOutBoundSendData = func(i interface{}) {
-		onData(i)
-	}
-	return nil
-}
-
-func (self *data) setOnOutBoundSendError(onSendError rxgo.ErrFunc) error {
-	if onSendError == nil {
-		return goerrors.InvalidParam
-	}
-	self.onOutBoundSendError = func(err error) {
-		onSendError(err)
-	}
-	return nil
-}
-
-func (self *data) setOnOutBoundComplete(onComplete rxgo.CompletedFunc) error {
-	if onComplete == nil {
-		return goerrors.InvalidParam
-	}
-	self.onOutBoundComplete = func() {
-		onComplete()
-	}
-	return nil
-}
+//
+//func (self *data) setInBoundHandler(handlers *goCommsDefinitions.DefaultRxNextHandler) error {
+//	if handlers == nil {
+//		return goerrors.InvalidParam
+//	}
+//	self.inBoundHandler = handlers
+//	return nil
+//
+//}
 
 func (self *data) setConnWrapper(wrapper *common.ConnWrapper) error {
 	self.connWrapper = wrapper
-	return nil
-}
-
-func (self *data) setOnInBoundSendData(onData rxgo.NextFunc) error {
-	if onData == nil {
-		return goerrors.InvalidParam
-	}
-	self.onInBoundSendData = func(i interface{}) {
-		onData(i)
-	}
-	return nil
-}
-
-func (self *data) setOnInBoundSendError(onSendError rxgo.ErrFunc) error {
-	if onSendError == nil {
-		return goerrors.InvalidParam
-	}
-	self.onInBoundSendError = func(err error) {
-		onSendError(err)
-	}
-	return nil
-}
-
-func (self *data) setOnInBoundComplete(onComplete rxgo.CompletedFunc) error {
-	if onComplete == nil {
-		return goerrors.InvalidParam
-	}
-	self.onInBoundComplete = func() {
-		onComplete()
-	}
 	return nil
 }
 

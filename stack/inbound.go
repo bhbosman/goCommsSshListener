@@ -33,28 +33,15 @@ func Inbound(
 					}
 					if sd, ok := stackData.(*data); ok {
 						NextInBoundChannel := make(chan rxgo.Item)
-
-						createSendData, createSendError, createComplete, err := RxHandlers.All(
+						var err error
+						sd.inBoundHandler, err = RxHandlers.All2(
 							goCommsDefinitions.SshStackName,
 							model.StreamDirectionUnknown,
 							NextInBoundChannel,
 							logger,
-							ctx)
-						if err != nil {
-							return nil, err
-						}
-
-						err = sd.setOnInBoundSendData(createSendData)
-						if err != nil {
-							return nil, err
-						}
-
-						err = sd.setOnInBoundSendError(createSendError)
-						if err != nil {
-							return nil, err
-						}
-
-						err = sd.setOnInBoundComplete(createComplete)
+							ctx,
+							true,
+						)
 						if err != nil {
 							return nil, err
 						}
@@ -64,28 +51,23 @@ func Inbound(
 							return nil, err
 						}
 
-						nextHandler, err := RxHandlers.NewRxNextHandler(
+						nextHandler, err := RxHandlers.NewRxNextHandler2(
 							goCommsDefinitions.SshStackName,
 							ConnectionCancelFunc,
 							inboundStackHandler,
-							sd.onInBoundSendData,
-							sd.onInBoundSendError,
-							sd.onInBoundComplete,
+							sd.inBoundHandler,
 							logger)
 						if err != nil {
 							return nil, err
 						}
 
-						rxOverride.ForEach(
+						rxOverride.ForEach2(
 							goCommsDefinitions.SshStackName,
 							model.StreamDirectionInbound,
 							obs,
 							ctx,
 							goFunctionCounter,
-							nextHandler.OnSendData,
-							nextHandler.OnError,
-							nextHandler.OnComplete,
-							false,
+							nextHandler,
 							opts...)
 						nextObs := rxgo.FromChannel(NextInBoundChannel, opts...)
 						return nextObs, nil

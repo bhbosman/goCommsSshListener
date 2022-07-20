@@ -4,6 +4,7 @@ import (
 	"context"
 	internal2 "github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
+	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/goprotoextra"
@@ -14,14 +15,13 @@ import (
 )
 
 type sshConnectionReactor struct {
-	openCloserCount      int64
-	onSend               goprotoextra.ToConnectionFunc
-	toConnectionReactor  goprotoextra.ToReactorFunc
-	cancelCtx            context.Context
-	cancelFunc           context.CancelFunc
-	connectionCancelFunc model.ConnectionCancelFunc
-	logger               *zap.Logger
-	//userContext                    interface{}
+	openCloserCount                int64
+	onSend                         goprotoextra.ToConnectionFunc
+	toConnectionReactor            goprotoextra.ToReactorFunc
+	cancelCtx                      context.Context
+	cancelFunc                     context.CancelFunc
+	connectionCancelFunc           model.ConnectionCancelFunc
+	logger                         *zap.Logger
 	messageHandlerService          IConnectionReactorMessageQueueService
 	toConnectionFuncReplacement    rxgo.NextFunc
 	toConnectionReactorReplacement rxgo.NextFunc
@@ -58,10 +58,14 @@ func (self *sshConnectionReactor) Init(
 	self.toConnectionReactorReplacement = toConnectionReactorReplacement
 	self.toConnectionFuncReplacement = toConnectionFuncReplacement
 	return func(i interface{}) {
-			_ = self.messageHandlerService.Send(i)
+			if self.messageHandlerService.State() == IFxService.Started {
+				_ = self.messageHandlerService.Send(i)
+			}
 		},
 		func(err error) {
-			_ = self.messageHandlerService.Send(err)
+			if self.messageHandlerService.State() == IFxService.Started {
+				_ = self.messageHandlerService.Send(err)
+			}
 		},
 		func() {
 

@@ -33,29 +33,15 @@ func Outbound(
 					}
 					if stackData, ok := sd.(*data); ok {
 						nextOutboundChannel := make(chan rxgo.Item)
-
-						createSendData, createSendError, createComplete, err := RxHandlers.All(
+						var err error
+						stackData.outBoundHandler, err = RxHandlers.All2(
 							goCommsDefinitions.SshStackName,
 							model.StreamDirectionUnknown,
 							nextOutboundChannel,
 							logger,
 							ctx,
+							true,
 						)
-						if err != nil {
-							return nil, err
-						}
-
-						err = stackData.setOnOutBoundSendData(createSendData)
-						if err != nil {
-							return nil, err
-						}
-
-						err = stackData.setOnOutBoundSendError(createSendError)
-						if err != nil {
-							return nil, err
-						}
-
-						err = stackData.setOnOutBoundComplete(createComplete)
 						if err != nil {
 							return nil, err
 						}
@@ -64,8 +50,7 @@ func Outbound(
 							stackData.conn,
 							stackData.ctx,
 							stackData.pipeRead,
-							createSendData,
-							//nextOutboundChannel,
+							stackData.outBoundHandler.OnSendData,
 						)
 						if err != nil {
 							return nil, err
@@ -81,28 +66,23 @@ func Outbound(
 							return nil, err
 						}
 
-						nextHandler, err := RxHandlers.NewRxNextHandler(
+						nextHandler, err := RxHandlers.NewRxNextHandler2(
 							goCommsDefinitions.SshStackName,
 							ConnectionCancelFunc,
 							outboundStackHandler,
-							stackData.onOutBoundSendData,
-							stackData.onOutBoundSendError,
-							stackData.onOutBoundComplete,
+							stackData.outBoundHandler,
 							logger)
 						if err != nil {
 							return nil, err
 						}
 
-						rxOverride.ForEach(
+						rxOverride.ForEach2(
 							goCommsDefinitions.SshStackName,
 							model.StreamDirectionOutbound,
 							obs,
 							ctx,
 							goFunctionCounter,
-							nextHandler.OnSendData,
-							nextHandler.OnError,
-							nextHandler.OnComplete,
-							false,
+							nextHandler,
 							opts...,
 						)
 						nextObs := rxgo.FromChannel(nextOutboundChannel, opts...)

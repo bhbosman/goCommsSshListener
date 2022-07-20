@@ -15,12 +15,6 @@ func (self *InboundStackHandler) GetAdditionalBytesIncoming() int {
 	return 0
 }
 
-func (self *InboundStackHandler) SendError(err error) {
-	if self.stackData.onInBoundSendError != nil {
-		self.stackData.onInBoundSendError(err)
-	}
-}
-
 func (self *InboundStackHandler) GetAdditionalBytesSend() int {
 	return 0
 }
@@ -31,12 +25,6 @@ func (self *InboundStackHandler) ReadMessage(_ interface{}) error {
 
 func (self *InboundStackHandler) Close() error {
 	return self.stackData.Close()
-}
-
-func (self *InboundStackHandler) SendData(data interface{}) {
-	if self.stackData.onInBoundSendData != nil {
-		self.stackData.onInBoundSendData(data)
-	}
 }
 
 func (self *InboundStackHandler) SendRws(rws goprotoextra.ReadWriterSize) {
