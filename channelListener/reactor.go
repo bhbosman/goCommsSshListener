@@ -8,7 +8,6 @@ import (
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocomms/intf"
 	"github.com/bhbosman/gomessageblock"
-	"github.com/bhbosman/goprotoextra"
 	"github.com/gdamore/tcell/v2/terminfo"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/multierr"
@@ -18,20 +17,18 @@ import (
 )
 
 type reactor struct {
-	channelType                    string
-	cancelCtx                      context.Context
-	cancelFunc                     context.CancelFunc
-	sshChannel                     common.IChannel
-	toConnectionReactor            goprotoextra.ToReactorFunc
-	channelProcess                 common.IChannelProcess
-	messageRouter                  *messageRouter.MessageRouter
-	onSend                         goprotoextra.ToConnectionFunc
-	logger                         *zap.Logger
-	sshChannelSessionSettings      common.ISshChannelSessionSettings
-	extraData                      []byte
-	goFunctionCounter              GoFunctionCounter.IService
-	toConnectionFuncReplacement    rxgo.NextFunc
-	toConnectionReactorReplacement rxgo.NextFunc
+	channelType               string
+	cancelCtx                 context.Context
+	cancelFunc                context.CancelFunc
+	sshChannel                common.IChannel
+	onSendToReactor           rxgo.NextFunc
+	onSendToConnection        rxgo.NextFunc
+	channelProcess            common.IChannelProcess
+	messageRouter             *messageRouter.MessageRouter
+	logger                    *zap.Logger
+	sshChannelSessionSettings common.ISshChannelSessionSettings
+	extraData                 []byte
+	goFunctionCounter         GoFunctionCounter.IService
 }
 
 func (self *reactor) handleEmptyQueue(_ *messages.EmptyQueue) error {
@@ -105,9 +102,9 @@ func (self *reactor) handleSshRequest(request *ssh.Request) {
 				self.sshChannel,
 				self.cancelCtx,
 				self.cancelFunc,
-				self.onSend,
-				self.toConnectionFuncReplacement,
+				self.onSendToConnection,
 				self.logger,
+				self.goFunctionCounter,
 			)
 			if err != nil {
 				err = self.sshChannel.Close()
@@ -157,15 +154,11 @@ func (self *reactor) handleReaderWriter(message *gomessageblock.ReaderWriter) {
 }
 
 func (self *reactor) Init(
-	onSend goprotoextra.ToConnectionFunc,
-	toConnectionReactor goprotoextra.ToReactorFunc,
-	toConnectionFuncReplacement rxgo.NextFunc,
-	toConnectionReactorReplacement rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, chan interface{}, error) {
-	self.toConnectionReactor = toConnectionReactor
-	self.onSend = onSend
-	self.toConnectionFuncReplacement = toConnectionFuncReplacement
-	self.toConnectionReactorReplacement = toConnectionReactorReplacement
+	onSendToReactor rxgo.NextFunc,
+	onSendToConnection rxgo.NextFunc,
+) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+	self.onSendToReactor = onSendToReactor
+	self.onSendToConnection = onSendToConnection
 
 	return func(i interface{}) {
 			_, _ = self.messageRouter.Route(i)
@@ -175,7 +168,7 @@ func (self *reactor) Init(
 		},
 		func() {
 
-		}, nil, nil
+		}, nil
 }
 
 func (self *reactor) Open() error {
@@ -195,8 +188,7 @@ func (self *reactor) createEchoChannelProcess() error {
 		self.sshChannel,
 		self.cancelCtx,
 		self.cancelFunc,
-		self.onSend,
-		self.toConnectionFuncReplacement,
+		self.onSendToConnection,
 		self.goFunctionCounter,
 	)
 	if err != nil {

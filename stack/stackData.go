@@ -13,7 +13,7 @@ import (
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/goerrors"
-	"github.com/bhbosman/goprotoextra"
+	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/fx"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
@@ -68,7 +68,7 @@ func (self *data) Close() error {
 
 func (self *data) Start(
 	Ctx context.Context,
-	ToReactorFunc goprotoextra.ToReactorFunc,
+	ToReactorFunc rxgo.NextFunc,
 ) (common.IInputStreamForStack, error) {
 	if self.connectionType == model.ClientConnection {
 		return nil, goerrors.InvalidParam
@@ -130,7 +130,7 @@ func (self *data) handleChannelsAndRequest(
 	fromConnection goCommsDefinitions.ISpecificInformationForConnection,
 	channels <-chan ssh.NewChannel,
 	globalRequests <-chan *ssh.Request,
-	ToReactorFunc goprotoextra.ToReactorFunc,
+	ToReactorFunc rxgo.NextFunc,
 ) error {
 
 	netAppParams := common.NewNetAppFuncInParams(

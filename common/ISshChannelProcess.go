@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/bhbosman/goprotoextra"
+	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/gdamore/tcell/v2/terminfo"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/zap"
@@ -42,9 +42,9 @@ type ISshChannelSessionSettings interface {
 		sshChannel IChannel,
 		parentCtx context.Context,
 		parentCancelFunc context.CancelFunc,
-		onSend goprotoextra.ToConnectionFunc,
-		onSendReplacement rxgo.NextFunc,
+		onSend rxgo.NextFunc,
 		logger *zap.Logger,
+		GoFunctionCounter GoFunctionCounter.IService,
 	) (IChannelProcess, error)
 	UseDefault() (SshBuildInChannelProcess, error)
 }

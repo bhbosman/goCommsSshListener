@@ -7,7 +7,6 @@ import (
 	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocommon/model"
-	"github.com/bhbosman/goprotoextra"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
@@ -16,8 +15,9 @@ import (
 
 type sshConnectionReactor struct {
 	openCloserCount                int64
-	onSend                         goprotoextra.ToConnectionFunc
-	toConnectionReactor            goprotoextra.ToReactorFunc
+	onSendToReactor                rxgo.NextFunc
+	onSendToConnection             rxgo.NextFunc
+	onSend                         rxgo.NextFunc
 	cancelCtx                      context.Context
 	cancelFunc                     context.CancelFunc
 	connectionCancelFunc           model.ConnectionCancelFunc
@@ -48,15 +48,11 @@ func (self *sshConnectionReactor) Close() error {
 }
 
 func (self *sshConnectionReactor) Init(
-	onSend goprotoextra.ToConnectionFunc,
-	toConnectionReactor goprotoextra.ToReactorFunc,
-	toConnectionFuncReplacement rxgo.NextFunc,
-	toConnectionReactorReplacement rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, chan interface{}, error) {
-	self.onSend = onSend
-	self.toConnectionReactor = toConnectionReactor
-	self.toConnectionReactorReplacement = toConnectionReactorReplacement
-	self.toConnectionFuncReplacement = toConnectionFuncReplacement
+	onSendToReactor rxgo.NextFunc,
+	onSendToConnection rxgo.NextFunc,
+) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+	self.onSendToReactor = onSendToReactor
+	self.onSendToConnection = onSendToConnection
 	return func(i interface{}) {
 			if self.messageHandlerService.State() == IFxService.Started {
 				_ = self.messageHandlerService.Send(i)
@@ -69,7 +65,7 @@ func (self *sshConnectionReactor) Init(
 		},
 		func() {
 
-		}, nil, nil
+		}, nil
 }
 
 func (self *sshConnectionReactor) Open() error {

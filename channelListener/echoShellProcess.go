@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
-	"github.com/bhbosman/goprotoextra"
 	"github.com/reactivex/rxgo/v2"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -19,8 +18,7 @@ func newEchoShellProcess(
 	sshChannel common.IChannel,
 	parentCtx context.Context,
 	parentCancelFunc context.CancelFunc,
-	onSend goprotoextra.ToConnectionFunc,
-	onSendReplacement rxgo.NextFunc,
+	onSend rxgo.NextFunc,
 	goFunctionCounter GoFunctionCounter.IService,
 ) (*echoShellProcess, error) {
 	emptyShell := common.NewBaseChannelProcess(
@@ -28,7 +26,6 @@ func newEchoShellProcess(
 		parentCtx,
 		parentCancelFunc,
 		onSend,
-		onSendReplacement,
 	)
 	newProcess := terminal.NewTerminal(emptyShell.RwProxy, ">>")
 	return &echoShellProcess{

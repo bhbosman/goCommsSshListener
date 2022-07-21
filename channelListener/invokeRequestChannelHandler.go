@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
-	"github.com/bhbosman/goprotoextra"
+	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/fx"
 	"golang.org/x/crypto/ssh"
 )
@@ -17,7 +17,7 @@ func invokeRequestChannelHandler() fx.Option {
 			CancelFunc        context.CancelFunc
 			RequestChannel    <-chan *ssh.Request
 			Lifecycle         fx.Lifecycle
-			ToReactorFunc     goprotoextra.ToReactorFunc `name:"ForReactor"`
+			ToReactorFunc     rxgo.NextFunc `name:"ForReactor"`
 			GoFunctionCounter GoFunctionCounter.IService
 		}) error {
 			params.Lifecycle.Append(fx.Hook{

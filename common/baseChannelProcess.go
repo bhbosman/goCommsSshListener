@@ -3,7 +3,6 @@ package common
 import (
 	"context"
 	"github.com/bhbosman/gocomms/common"
-	"github.com/bhbosman/goprotoextra"
 	"github.com/gdamore/tcell/v2/terminfo"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/multierr"
@@ -43,14 +42,12 @@ func NewBaseChannelProcess(
 	sshChannel IChannel,
 	parentCtx context.Context,
 	parentCancelFunc context.CancelFunc,
-	onSend goprotoextra.ToConnectionFunc,
-	onSendReplacement rxgo.NextFunc,
+	onSend rxgo.NextFunc,
 ) BaseChannelProcess {
 	tempPipeReadClose, tempPipeWriteClose := common.Pipe(parentCtx)
 	rwProxy := &ReaderWriterProxy{
-		PipeReader:        tempPipeReadClose,
-		OnSend:            onSend,
-		onSendReplacement: onSendReplacement,
+		PipeReader: tempPipeReadClose,
+		OnSend:     onSend,
 	}
 	return BaseChannelProcess{
 		CancelCtx:      parentCtx,

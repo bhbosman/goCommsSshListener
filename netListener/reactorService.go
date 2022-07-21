@@ -2,6 +2,7 @@ package netListener
 
 import (
 	"context"
+	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/gocommon/ChannelHandler"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/Services/IFxService"
@@ -140,6 +141,7 @@ func (self *service) goStart(data IConnectionReactorMessageQueueData) {
 		func() int {
 			return len(self.cmdChannel)
 		},
+		goCommsDefinitions.CreateTryNextFunc(self.cmdChannel),
 	)
 loop:
 	for {

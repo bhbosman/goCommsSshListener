@@ -10,7 +10,7 @@ import (
 	"github.com/bhbosman/gocommon/Services/interfaces"
 	"github.com/bhbosman/gocommon/model"
 	common2 "github.com/bhbosman/gocomms/common"
-	"github.com/bhbosman/goprotoextra"
+	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/zap"
 	"net"
 	"reflect"
@@ -58,7 +58,7 @@ func createStackState(
 		Start: func(
 			inputStreamForStack common2.IInputStreamForStack,
 			stackData common2.IStackCreateData,
-			ToReactorFunc goprotoextra.ToReactorFunc,
+			ToReactorFunc rxgo.NextFunc,
 		) (common2.IInputStreamForStack, error) {
 			if stackDataInstance, ok := stackData.(*data); ok {
 				return stackDataInstance.Start(ctx, ToReactorFunc)

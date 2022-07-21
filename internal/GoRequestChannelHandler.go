@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
-	"github.com/bhbosman/goprotoextra"
+	"github.com/reactivex/rxgo/v2"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -12,7 +12,7 @@ func GoRequestChannelHandler(
 	name string,
 	cancelContext context.Context,
 	requestChannel <-chan *ssh.Request,
-	ToReactorFunc goprotoextra.ToReactorFunc,
+	ToReactorFunc rxgo.NextFunc,
 	goFunctionCounter GoFunctionCounter.IService,
 ) error {
 	return goFunctionCounter.GoRun(
@@ -28,7 +28,7 @@ func GoRequestChannelHandler(
 						break loop
 					}
 					if request != nil {
-						_ = ToReactorFunc(true, request)
+						ToReactorFunc(request)
 					}
 				}
 			}

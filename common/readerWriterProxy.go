@@ -2,16 +2,14 @@ package common
 
 import (
 	"github.com/bhbosman/gomessageblock"
-	"github.com/bhbosman/goprotoextra"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/multierr"
 	"io"
 )
 
 type ReaderWriterProxy struct {
-	OnSend            goprotoextra.ToConnectionFunc
-	onSendReplacement rxgo.NextFunc
-	PipeReader        io.ReadCloser
+	OnSend     rxgo.NextFunc
+	PipeReader io.ReadCloser
 }
 
 func (self *ReaderWriterProxy) Close() error {
@@ -27,7 +25,7 @@ func (self *ReaderWriterProxy) Read(p []byte) (n int, err error) {
 }
 
 func (self *ReaderWriterProxy) Write(p []byte) (n int, err error) {
-	err = self.OnSend(gomessageblock.NewReaderWriterBlock(p))
+	self.OnSend(gomessageblock.NewReaderWriterBlock(p))
 	if err != nil {
 		return 0, err
 	}
