@@ -161,8 +161,6 @@ func (self *data) handleChannelsAndRequest(
 
 	app := channelListener.NewManagerApp(
 		"sasdasdas",
-		0,
-		0,
 		"asdsa",
 		parse.String(),
 		channels,

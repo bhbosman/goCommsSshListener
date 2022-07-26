@@ -6,8 +6,8 @@ import (
 	"github.com/bhbosman/gocommon/ChannelHandler"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/Services/IFxService"
-	"github.com/bhbosman/gocommon/Services/ISendMessage"
 	"github.com/bhbosman/gocommon/messages"
+	"github.com/bhbosman/gocommon/services/ISendMessage"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
 )

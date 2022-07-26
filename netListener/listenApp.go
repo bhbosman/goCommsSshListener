@@ -7,7 +7,6 @@ import (
 	common2 "github.com/bhbosman/goCommsSshListener/common"
 	internal2 "github.com/bhbosman/goCommsSshListener/internal"
 	sshStack "github.com/bhbosman/goCommsSshListener/stack"
-	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/gocomms/intf"
 	"go.uber.org/fx"
@@ -16,8 +15,6 @@ import (
 
 func NewSshListenApp(
 	name string,
-	serviceIdentifier model.ServiceIdentifier,
-	serviceDependentOn model.ServiceIdentifier,
 	connectionInstancePrefix string,
 	useProxy bool,
 	proxyUrl *url.URL,
@@ -60,13 +57,10 @@ func NewSshListenApp(
 
 	f := goCommsNetListener.NewNetListenApp(
 		name,
-		serviceIdentifier,
-		serviceDependentOn,
 		connectionInstancePrefix,
 		useProxy,
 		proxyUrl,
 		connectionUrl,
-		//goCommsDefinitions.TransportFactoryOnlySSHStack,
 		settings...,
 	)
 	return f

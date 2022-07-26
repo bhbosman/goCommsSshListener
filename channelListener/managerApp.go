@@ -6,7 +6,6 @@ import (
 	"github.com/bhbosman/goCommsStacks/bottom"
 	"github.com/bhbosman/goCommsStacks/topStack"
 	"github.com/bhbosman/gocommon/messages"
-	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/common"
 	"go.uber.org/fx"
 	"golang.org/x/crypto/ssh"
@@ -16,8 +15,6 @@ import (
 
 func NewManagerApp(
 	name string,
-	serviceIdentifier model.ServiceIdentifier,
-	serviceDependentOn model.ServiceIdentifier,
 	connectionInstancePrefix string,
 	urlAsString string,
 	channels <-chan ssh.NewChannel,
@@ -27,9 +24,7 @@ func NewManagerApp(
 ) common.NetAppFuncInParamsCallback {
 	return func(params common.NetAppFuncInParams) messages.CreateAppCallback {
 		return messages.CreateAppCallback{
-			ServiceId:         serviceIdentifier,
-			ServiceDependency: serviceDependentOn,
-			Name:              name,
+			Name: name,
 			Callback: func() (messages.IApp, context.CancelFunc, error) {
 				resultCancelFunc := func() {
 					cancelFunc()
