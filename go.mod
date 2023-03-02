@@ -48,7 +48,7 @@ replace github.com/bhbosman/goMessages => ../goMessages
 
 replace github.com/bhbosman/gocommon => ../gocommon
 
-replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20220617134815-f277ff266f47
+replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20230302060806-d02c40b7514e
 
 replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
 
