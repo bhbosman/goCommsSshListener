@@ -67,7 +67,7 @@ func createStackState(
 		},
 		Stop: func(
 			stackData interface{},
-			endParams common2.StackEndStateParams,
+			_ common2.StackEndStateParams,
 		) error {
 			if stop, ok := stackData.(*data); ok {
 				return stop.Stop()
