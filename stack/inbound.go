@@ -22,7 +22,7 @@ func Inbound(
 	goFunctionCounter GoFunctionCounter.IService,
 	opts ...rxgo.Option,
 ) common2.BoundResult {
-	return func() (common2.IStackBoundDefinition, error) {
+	return func() (common2.IStackBoundFactory, error) {
 		return common2.NewStackBoundDefinition(
 				func(
 					stackData common2.IStackCreateData,
