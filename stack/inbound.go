@@ -2,6 +2,7 @@ package stack
 
 import (
 	"github.com/bhbosman/goCommsDefinitions"
+	"github.com/bhbosman/gocommon"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocommon/rxOverride"
@@ -26,8 +27,8 @@ func Inbound(
 				func(
 					stackData common2.IStackCreateData,
 					pipeData common2.IPipeCreateData,
-					obs rxgo.Observable,
-				) (rxgo.Observable, error) {
+					obs gocommon.IObservable,
+				) (gocommon.IObservable, error) {
 					if pipeData != nil {
 						return nil, goerrors.InvalidParam
 					}

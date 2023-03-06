@@ -28,11 +28,11 @@ func createStackState(
 	SshChannelSettings common.ISshChannelSettings,
 	goFunctionCounter GoFunctionCounter.IService,
 
-) *common2.StackState {
-	return &common2.StackState{
-		Id:          goCommsDefinitions.SshStackName,
-		HijackStack: true,
-		Create: func() (common2.IStackCreateData, error) {
+) common2.IStackState {
+	return common2.NewStackState(
+		goCommsDefinitions.SshStackName,
+		true,
+		func() (common2.IStackCreateData, error) {
 			return NewStackData(
 				connectionType,
 				conn,
@@ -46,7 +46,7 @@ func createStackState(
 				goFunctionCounter,
 			), nil
 		},
-		Destroy: func(
+		func(
 			connectionType model.ConnectionType,
 			stackData common2.IStackCreateData,
 		) error {
@@ -55,7 +55,7 @@ func createStackState(
 			}
 			return WrongStackDataError(connectionType, stackData)
 		},
-		Start: func(
+		func(
 			inputStreamForStack common2.IInputStreamForStack,
 			stackData common2.IStackCreateData,
 			ToReactorFunc rxgo.NextFunc,
@@ -65,16 +65,15 @@ func createStackState(
 			}
 			return nil, WrongStackDataError(connectionType, stackData)
 		},
-		Stop: func(
+		func(
 			stackData interface{},
-			_ common2.StackEndStateParams,
 		) error {
 			if stop, ok := stackData.(*data); ok {
 				return stop.Stop()
 			}
 			return WrongStackDataError(connectionType, stackData)
 		},
-	}
+	)
 }
 
 func WrongStackDataError(connectionType model.ConnectionType, stackData interface{}) error {

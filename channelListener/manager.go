@@ -2,6 +2,7 @@ package channelListener
 
 import (
 	"context"
+	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/goConnectionManager"
@@ -191,7 +192,8 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
-					_ = cancellationContext.Add(
+					_, _ = cancellationContext.Add(
+						"",
 						func() func() {
 							b := false
 							return func() {
@@ -242,6 +244,7 @@ func NewManager(
 		CancelFunction                           context.CancelFunc
 		Settings                                 *channelListenerManagerSettings
 		ZapLogger                                *zap.Logger
+		CancellationContext                      goCommsDefinitions.ICancellationContext
 		ConnectionName                           string `name:"ConnectionName"`
 		ConnectionInstancePrefix                 string `name:"ConnectionInstancePrefix"`
 		UniqueSessionNumber                      interfaces.IUniqueReferenceService
@@ -266,8 +269,8 @@ func NewManager(
 		params.ProxyUrl,
 		params.ConnectionUrl,
 		params.CancelCtx,
+		params.CancellationContext,
 		params.ConnectionManager,
-		//params.Settings.userContext,
 		params.ZapLogger,
 		params.UniqueSessionNumber,
 		params.AdditionalFxOptionsForConnectionInstance,

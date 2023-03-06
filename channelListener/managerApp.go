@@ -38,11 +38,11 @@ func NewManagerApp(
 				netListenSettings.AddFxOptionsForConnectionInstance(
 					[]fx.Option{
 						goCommsDefinitions.ProvideTransportFactoryForEmptyName(
-							topStack.ProvideTopStack(),
+							topStack.Provide(),
 							bottom.Provide(),
 						),
 						goCommsDefinitions.ProvideTransportFactoryForSshChannelSession(
-							topStack.ProvideTopStack(),
+							topStack.Provide(),
 							bottom.Provide(),
 						),
 					},

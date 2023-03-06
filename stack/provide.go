@@ -38,7 +38,7 @@ func Provide() fx.Option {
 					SshChannelSettings   common.ISshChannelSettings `optional:"true"`
 					GoFunctionCounter    GoFunctionCounter.IService
 				},
-			) (*internalComms.StackDefinition, error) {
+			) (internalComms.IStackDefinition, error) {
 				var errList error = nil
 				if params.ConnectionCancelFunc == nil {
 					errList = multierr.Append(errList, goerrors.InvalidParam)
@@ -51,30 +51,25 @@ func Provide() fx.Option {
 				if errList != nil {
 					return nil, errList
 				}
-
-				return &internalComms.StackDefinition{
-					Name: goCommsDefinitions.SshStackName,
-					Inbound: internalComms.NewBoundResultImpl(
-						Inbound(
-							params.ConnectionType,
-							params.ConnectionCancelFunc,
-							params.Logger,
-							params.Ctx,
-							params.GoFunctionCounter,
-							params.Opts...,
-						),
+				return internalComms.NewStackDefinition(
+					goCommsDefinitions.SshStackName,
+					Inbound(
+						params.ConnectionType,
+						params.ConnectionCancelFunc,
+						params.Logger,
+						params.Ctx,
+						params.GoFunctionCounter,
+						params.Opts...,
 					),
-					Outbound: internalComms.NewBoundResultImpl(
-						Outbound(
-							params.ConnectionType,
-							params.ConnectionCancelFunc,
-							params.Logger,
-							params.Ctx,
-							params.GoFunctionCounter,
-							params.Opts...,
-						),
+					Outbound(
+						params.ConnectionType,
+						params.ConnectionCancelFunc,
+						params.Logger,
+						params.Ctx,
+						params.GoFunctionCounter,
+						params.Opts...,
 					),
-					StackState: createStackState(
+					createStackState(
 						params.ConnectionType,
 						params.ConnectionManager,
 						params.UniqueSessionNumber,
@@ -85,8 +80,8 @@ func Provide() fx.Option {
 						params.CtxCancelFunc,
 						params.SshChannelSettings,
 						params.GoFunctionCounter,
-					),
-				}, nil
+					))
+
 			},
 		},
 	)
