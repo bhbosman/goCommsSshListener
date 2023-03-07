@@ -32,7 +32,7 @@ func Provide() fx.Option {
 					ConnectionManager    goConnectionManager.IService
 					UniqueSessionNumber  interfaces.IUniqueReferenceService
 					ConnectionReactor    internal.ISshConnectionReactor
-					Conn                 net.Conn
+					Conn                 net.Conn `name:"PrimaryConnection"`
 					Ctx                  context.Context
 					CtxCancelFunc        context.CancelFunc
 					SshChannelSettings   common.ISshChannelSettings `optional:"true"`
