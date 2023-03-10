@@ -7,6 +7,7 @@ import (
 	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocommon/model"
+	"github.com/bhbosman/gocomms/intf"
 	"github.com/reactivex/rxgo/v2"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
@@ -47,12 +48,9 @@ func (self *sshConnectionReactor) Close() error {
 	return nil
 }
 
-func (self *sshConnectionReactor) Init(
-	onSendToReactor rxgo.NextFunc,
-	onSendToConnection rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
-	self.onSendToReactor = onSendToReactor
-	self.onSendToConnection = onSendToConnection
+func (self *sshConnectionReactor) Init(params intf.IInitParams) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+	self.onSendToReactor = params.OnSendToReactor()
+	self.onSendToConnection = params.OnSendToConnection()
 	return func(i interface{}) {
 			if self.messageHandlerService.State() == IFxService.Started {
 				_ = self.messageHandlerService.Send(i)
@@ -81,7 +79,6 @@ func NewSshConnectionReactor(
 	cancelFunc context.CancelFunc,
 	connectionCancelFunc model.ConnectionCancelFunc,
 	logger *zap.Logger,
-	//userContext interface{},
 	goFunctionCounter GoFunctionCounter.IService,
 ) (internal2.ISshConnectionReactor, error) {
 

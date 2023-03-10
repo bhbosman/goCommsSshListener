@@ -3,12 +3,12 @@ module github.com/bhbosman/goCommsSshListener
 go 1.18
 
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20230302063431-887458f90947
+	github.com/bhbosman/goCommsDefinitions v0.0.0-20230308211643-24fe88b2378e
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
 	github.com/bhbosman/goCommsStacks v0.0.0-20220611141421-a7d405cadbfa
 	github.com/bhbosman/goConnectionManager v0.0.0-20230302065222-d613f6fe8f80
-	github.com/bhbosman/gocommon v0.0.0-20220721070423-baf2cd622704
-	github.com/bhbosman/gocomms v0.0.0-20220628074707-e93417aaaed2
+	github.com/bhbosman/gocommon v0.0.0-20230308114127-b5a97171c205
+	github.com/bhbosman/gocomms v0.0.0-20230307212550-0918a992672c
 	github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf
 	github.com/bhbosman/gomessageblock v0.0.0-20220617132215-32f430d7de62
 	github.com/bhbosman/goprotoextra v0.0.2-0.20210817141206-117becbef7c7
@@ -28,7 +28,7 @@ require (
 )
 
 require (
-	github.com/cenkalti/backoff/v4 v4.0.0 // indirect
+	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/icza/gox v0.0.0-20220321141217-e2d488ab2fbc // indirect

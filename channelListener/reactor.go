@@ -153,12 +153,9 @@ func (self *reactor) handleReaderWriter(message *gomessageblock.ReaderWriter) {
 	_, _ = io.Copy(self.channelProcess, message)
 }
 
-func (self *reactor) Init(
-	onSendToReactor rxgo.NextFunc,
-	onSendToConnection rxgo.NextFunc,
-) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
-	self.onSendToReactor = onSendToReactor
-	self.onSendToConnection = onSendToConnection
+func (self *reactor) Init(params intf.IInitParams) (rxgo.NextFunc, rxgo.ErrFunc, rxgo.CompletedFunc, error) {
+	self.onSendToReactor = params.OnSendToReactor()
+	self.onSendToConnection = params.OnSendToConnection()
 
 	return func(i interface{}) {
 			self.messageRouter.Route(i)
