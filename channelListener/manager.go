@@ -194,17 +194,20 @@ func (self *manager) ListenForNewConnections() error {
 					}
 					_, _ = cancellationContext.Add(
 						"",
-						func() func() {
+						func(
+							ZapLogger *zap.Logger,
+							connectionReactor internal.ISshConnectionReactor,
+						) func(goCommsDefinitions.ICancellationContext) {
 							b := false
-							return func() {
+							return func(cancellationContext goCommsDefinitions.ICancellationContext) {
 								if !b {
 									b = true
 									var errList error
-									errList = self.ConnectionReactor.RemoveAcceptedChannel(uniqueReference)
+									errList = connectionReactor.RemoveAcceptedChannel(uniqueReference)
 									// TODO: Adhere to timeouts
 									errList = multierr.Append(errList, connectionApp.Stop(context.Background()))
 									if errList != nil {
-										self.ZapLogger.Error(
+										ZapLogger.Error(
 											"Stopping error. not really a problem. informational",
 											zap.Error(errList))
 									}
@@ -213,7 +216,10 @@ func (self *manager) ListenForNewConnections() error {
 									}
 								}
 							}
-						}())
+						}(
+							self.ZapLogger,
+							self.ConnectionReactor,
+						))
 					continue loop
 				} else {
 					err = acceptNewChannel.Reject(ssh.ResourceShortage, "")
@@ -232,7 +238,7 @@ func (self *manager) acceptWithContext() (common.INewChannel, context.CancelFunc
 	return self.listener.acceptWithContext()
 }
 
-func NewManager(
+func newManager(
 	params struct {
 		fx.In
 		UseProxy                                 bool     `name:"UseProxy"`
