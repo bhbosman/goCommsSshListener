@@ -24,7 +24,7 @@ type reactor struct {
 	onSendToReactor           rxgo.NextFunc
 	onSendToConnection        rxgo.NextFunc
 	channelProcess            common.IChannelProcess
-	messageRouter             *messageRouter.MessageRouter
+	messageRouter             messageRouter.IMessageRouter
 	logger                    *zap.Logger
 	sshChannelSessionSettings common.ISshChannelSessionSettings
 	extraData                 []byte
