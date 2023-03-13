@@ -88,7 +88,7 @@ func NewManagerApp(
 					goCommsDefinitions.ProvideUrl("ConnectionUrl", sshUrl),
 					goCommsDefinitions.ProvideUrl("ProxyUrl", nil),
 					goCommsDefinitions.ProvideBool("UseProxy", false),
-					fx.Provide(fx.Annotated{Target: newManager}),
+					fx.Provide(fx.Annotated{Target: NewManager}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.listenerAcceptFactory}),
 					fx.Provide(fx.Annotated{Target: netListenSettings.netListenerFactory}),
 					provideISpecificInformationForConnection(conn),
