@@ -2,7 +2,6 @@ package channelListener
 
 import (
 	"context"
-	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/goConnectionManager"
@@ -10,6 +9,7 @@ import (
 	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/Services/interfaces"
 	"github.com/bhbosman/gocommon/model"
+	common2 "github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/gocomms/netBase"
 	"go.uber.org/fx"
 	"go.uber.org/multierr"
@@ -197,9 +197,9 @@ func (self *manager) ListenForNewConnections() error {
 						func(
 							connectionReactor internal.ISshConnectionReactor,
 							zapLogger *zap.Logger,
-						) func(goCommsDefinitions.ICancellationContext) {
+						) func(common2.ICancellationContext) {
 							b := false
-							return func(iCancellationContext goCommsDefinitions.ICancellationContext) {
+							return func(iCancellationContext common2.ICancellationContext) {
 								if !b {
 									b = true
 									var errList error
@@ -247,7 +247,7 @@ func NewManager(
 		CancelFunction                           context.CancelFunc
 		Settings                                 *channelListenerManagerSettings
 		ZapLogger                                *zap.Logger
-		CancellationContext                      goCommsDefinitions.ICancellationContext
+		CancellationContext                      common2.ICancellationContext
 		ConnectionName                           string `name:"ConnectionName"`
 		ConnectionInstancePrefix                 string `name:"ConnectionInstancePrefix"`
 		UniqueSessionNumber                      interfaces.IUniqueReferenceService
