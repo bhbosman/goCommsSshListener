@@ -7,7 +7,7 @@ import (
 )
 
 type Data struct {
-	MessageRouter *messageRouter.MessageRouter
+	MessageRouter messageRouter.IMessageRouter
 }
 
 func (self *Data) ShutDown() error {
