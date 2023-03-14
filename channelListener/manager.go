@@ -192,31 +192,33 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
-					_, _ = cancellationContext.Add(
-						"",
+					_ = self.RegisterConnectionShutdown(
+						uniqueReference,
 						func(
 							connectionReactor internal.ISshConnectionReactor,
 							zapLogger *zap.Logger,
-						) func(common2.ICancellationContext) {
-							b := false
-							return func(iCancellationContext common2.ICancellationContext) {
-								if !b {
-									b = true
-									var errList error
-									errList = connectionReactor.RemoveAcceptedChannel(uniqueReference)
-									// TODO: Adhere to timeouts
-									errList = multierr.Append(errList, connectionApp.Stop(context.Background()))
-									if errList != nil {
-										zapLogger.Error(
-											"Stopping error. not really a problem. informational",
-											zap.Error(errList))
-									}
-									if connCancelFunc != nil {
-										connCancelFunc()
-									}
+						) func() {
+							return func() {
+								var errList error
+								errList = connectionReactor.RemoveAcceptedChannel(uniqueReference)
+								// TODO: Adhere to timeouts
+								errList = multierr.Append(errList, connectionApp.Stop(context.Background()))
+								if errList != nil {
+									zapLogger.Error(
+										"Stopping error. not really a problem. informational",
+										zap.Error(errList))
+								}
+								if connCancelFunc != nil {
+									connCancelFunc()
 								}
 							}
-						}(self.ConnectionReactor, self.ZapLogger))
+						}(
+							self.ConnectionReactor,
+							self.ZapLogger,
+						),
+						cancellationContext,
+						self.CancellationContext,
+					)
 					continue loop
 				} else {
 					err = acceptNewChannel.Reject(ssh.ResourceShortage, "")
