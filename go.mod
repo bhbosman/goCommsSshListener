@@ -2,21 +2,23 @@ module github.com/bhbosman/goCommsSshListener
 
 go 1.18
 
+require github.com/bhbosman/goConn v0.0.0-20230317052122-2eec27fd9bc8 // indirect
+
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20230308211643-24fe88b2378e
+	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
 	github.com/bhbosman/goCommsStacks v0.0.0-20220611141421-a7d405cadbfa
-	github.com/bhbosman/goConnectionManager v0.0.0-20230302065222-d613f6fe8f80
-	github.com/bhbosman/gocommon v0.0.0-20230308114127-b5a97171c205
+	github.com/bhbosman/goConnectionManager v0.0.0-20230312204225-183859f3cef5
+	github.com/bhbosman/gocommon v0.0.0-20230312205650-25cf8341f1c9
 	github.com/bhbosman/gocomms v0.0.0-20230307212550-0918a992672c
 	github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf
-	github.com/bhbosman/gomessageblock v0.0.0-20220617132215-32f430d7de62
+	github.com/bhbosman/gomessageblock v0.0.0-20230308173223-e8144f25444c
 	github.com/bhbosman/goprotoextra v0.0.2-0.20210817141206-117becbef7c7
 	github.com/gdamore/tcell/v2 v2.5.1
 	github.com/golang/mock v1.6.0
 	go.uber.org/fx v1.19.2
-	go.uber.org/multierr v1.6.0
-	go.uber.org/zap v1.23.0
+	go.uber.org/multierr v1.10.0
+	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.7.0
 	golang.org/x/net v0.8.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
@@ -64,3 +66,5 @@ replace github.com/bhbosman/goCommsNetListener => ../goCommsNetListener
 replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
 
 replace github.com/bhbosman/goprotoextra => ../goprotoextra
+
+replace github.com/bhbosman/goConn => ../goConn

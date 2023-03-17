@@ -4,12 +4,12 @@ import (
 	"context"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/goCommsSshListener/internal"
+	"github.com/bhbosman/goConn"
 	"github.com/bhbosman/goConnectionManager"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/Services/IFxService"
 	"github.com/bhbosman/gocommon/Services/interfaces"
 	"github.com/bhbosman/gocommon/model"
-	common2 "github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/gocomms/netBase"
 	"go.uber.org/fx"
 	"go.uber.org/multierr"
@@ -171,7 +171,7 @@ func (self *manager) ListenForNewConnections() error {
 					}
 					onErr := func(error error) {
 						if cancellationContext != nil {
-							cancellationContext.Cancel()
+							cancellationContext.Cancel("asdasdasdas")
 						}
 						err = multierr.Append(err, onErrorFlush())
 						err = multierr.Append(err, acceptedChannel.Close())
@@ -249,7 +249,7 @@ func NewManager(
 		CancelFunction                           context.CancelFunc
 		Settings                                 *channelListenerManagerSettings
 		ZapLogger                                *zap.Logger
-		CancellationContext                      common2.ICancellationContext
+		CancellationContext                      goConn.ICancellationContext
 		ConnectionName                           string `name:"ConnectionName"`
 		ConnectionInstancePrefix                 string `name:"ConnectionInstancePrefix"`
 		UniqueSessionNumber                      interfaces.IUniqueReferenceService

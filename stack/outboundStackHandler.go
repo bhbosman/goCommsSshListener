@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocomms/RxHandlers"
 	"github.com/bhbosman/goerrors"
 	"github.com/bhbosman/goprotoextra"
@@ -9,6 +10,15 @@ import (
 type OutboundStackHandler struct {
 	errorState error
 	stackData  *data
+}
+
+func (self *OutboundStackHandler) EmptyQueue() {
+}
+
+func (self *OutboundStackHandler) ClearCounters() {
+}
+
+func (self *OutboundStackHandler) PublishCounters(counters *model.PublishRxHandlerCounters) {
 }
 
 func (self *OutboundStackHandler) GetAdditionalBytesIncoming() int {
