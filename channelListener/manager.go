@@ -192,7 +192,7 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
-					_ = netBase.RegisterConnectionShutdown(
+					goConn.RegisterConnectionShutdown(
 						uniqueReference,
 						func(
 							connectionReactor internal.ISshConnectionReactor,
