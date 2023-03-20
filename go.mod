@@ -2,7 +2,7 @@ module github.com/bhbosman/goCommsSshListener
 
 go 1.18
 
-require github.com/bhbosman/goConn v0.0.0-20230317052122-2eec27fd9bc8 // indirect
+require github.com/bhbosman/goConn v0.0.0-20230317052122-2eec27fd9bc8
 
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
