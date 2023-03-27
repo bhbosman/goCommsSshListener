@@ -5,6 +5,7 @@ import (
 	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsStacks/bottom"
 	"github.com/bhbosman/goCommsStacks/topStack"
+	"github.com/bhbosman/goConn"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocomms/common"
 	"go.uber.org/fx"
@@ -19,16 +20,12 @@ func NewManagerApp(
 	urlAsString string,
 	channels <-chan ssh.NewChannel,
 	conn goCommsDefinitions.ISpecificInformationForConnection,
-	cancelFunc context.CancelFunc,
 	settings ...common.INetManagerSettingsApply,
 ) common.NetAppFuncInParamsCallback {
 	return func(params common.NetAppFuncInParams) messages.CreateAppCallback {
 		return messages.CreateAppCallback{
 			Name: name,
-			Callback: func() (messages.IApp, context.CancelFunc, error) {
-				resultCancelFunc := func() {
-					cancelFunc()
-				}
+			Callback: func() (messages.IApp, goConn.ICancellationContext, error) {
 				netListenSettings := &channelListenerManagerSettings{
 					NetManagerSettings:    common.NewNetManagerSettings(512),
 					userContext:           nil,
@@ -48,6 +45,10 @@ func NewManagerApp(
 					},
 				)
 
+				namedLogger := params.ZapLogger.Named(name)
+				ctx, cancelFunc := context.WithCancel(params.ParentContext)
+				cancellationContext, err := goConn.NewCancellationContextNoCloser(name, cancelFunc, ctx, namedLogger)
+
 				for _, setting := range settings {
 					if setting == nil {
 						continue
@@ -55,12 +56,12 @@ func NewManagerApp(
 					if listenAppSettingsApply, ok := setting.(iListenAppSettingsApply); ok {
 						err := listenAppSettingsApply.apply(netListenSettings)
 						if err != nil {
-							return nil, resultCancelFunc, err
+							return nil, cancellationContext, err
 						}
 					} else {
 						err := setting.ApplyNetManagerSettings(&netListenSettings.NetManagerSettings)
 						if err != nil {
-							return nil, resultCancelFunc, err
+							return nil, cancellationContext, err
 						}
 					}
 				}
@@ -82,6 +83,8 @@ func NewManagerApp(
 					name,
 					connectionInstancePrefix,
 					params,
+					cancellationContext,
+					namedLogger,
 					callbackForConnectionInstance,
 					fx.Options(netListenSettings.MoreOptions...),
 					fx.Supply(netListenSettings),
@@ -96,7 +99,7 @@ func NewManagerApp(
 					invokeListenForNewConnections(),
 				)
 				fxApp := fx.New(options)
-				return fxApp, resultCancelFunc, fxApp.Err()
+				return fxApp, cancellationContext, fxApp.Err()
 			},
 		}
 	}

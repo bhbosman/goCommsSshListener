@@ -97,43 +97,30 @@ func (self *manager) ListenForNewConnections() error {
 						continue loop
 					}
 
-					onErrorFlush := func() func() error {
-						called := false
-						return func() error {
-							if !called {
-								called = true
-								connCancelFunc()
-								err := multierr.Append(err, acceptedChannel.Close())
-								err = multierr.Append(err,
-									self.GoFunctionCounter.GoRun(
-										"SshChannelListenerManager.ListenForNewConnections.Flush.AcceptedChannelRequestChannel",
-										func() {
-											for range acceptedChannelRequestChannel {
-											}
-										},
-									),
-								)
-								self.ZapLogger.Error("OnErrorFlush", zap.Error(err))
-								return err
-							}
-							return nil
-						}
-					}()
-
 					acceptedChannel = newSshChannelWithSemaphoreWrapper(acceptedChannel, sem)
 
 					uniqueReference := self.UniqueSessionNumber.Next(self.ConnectionInstancePrefix)
+
+					ctx, cancelFunc := context.WithCancel(self.CancellationContext.CancelContext())
+					cancellationContext, err := goConn.NewCancellationContext(
+						uniqueReference,
+						cancelFunc,
+						ctx,
+						self.ZapLogger,
+						acceptedChannel)
+					if err != nil {
+						return
+					}
 
 					connectionInstance := netBase.NewConnectionInstance(
 						self.ConnectionUrl,
 						self.UniqueSessionNumber,
 						self.ConnectionManager,
-						//self.UserContext,
-						self.CancelCtx,
+						cancellationContext,
 						self.AdditionalFxOptionsForConnectionInstance,
 						self.ZapLogger,
 					)
-					connectionApp, connectionAppCtx, cancellationContext, err := connectionInstance.NewConnectionInstanceWithStackName(
+					connectionApp, err := connectionInstance.NewConnectionInstanceWithStackName(
 						uniqueReference,
 						self.GoFunctionCounter,
 						model.ServerConnection,
@@ -166,25 +153,26 @@ func (self *manager) ListenForNewConnections() error {
 							invokeRequestChannelHandler(),
 						),
 					)
-					if connectionAppCtx != nil {
-						err = multierr.Append(err, connectionAppCtx.Err())
+					if err != nil {
+						cancellationContext.CancelWithError("sadsadasd", err)
 					}
-					onErr := func(error error) {
-						if cancellationContext != nil {
-							cancellationContext.Cancel("asdasdasdas")
+					onErr := func() {
+						if connCancelFunc != nil {
+							connCancelFunc()
 						}
-						err = multierr.Append(err, onErrorFlush())
+						if cancellationContext != nil {
+							cancellationContext.Cancel("123")
+						}
 						err = multierr.Append(err, acceptedChannel.Close())
-						self.ZapLogger.Error("NewConnectionInstanceWithStackName", zap.Error(err))
 					}
 					if err != nil {
-						onErr(err)
-						continue loop
+						onErr()
+						return
 					}
 
 					err = connectionApp.Start(context.Background())
 					if err != nil {
-						onErr(err)
+						onErr()
 						continue loop
 					}
 
@@ -192,7 +180,7 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
-					goConn.RegisterConnectionShutdown(
+					_ = goConn.RegisterConnectionShutdown(
 						uniqueReference,
 						func(
 							connectionReactor internal.ISshConnectionReactor,
@@ -211,6 +199,17 @@ func (self *manager) ListenForNewConnections() error {
 								if connCancelFunc != nil {
 									connCancelFunc()
 								}
+								err := multierr.Append(err, acceptedChannel.Close())
+								err = multierr.Append(err,
+									self.GoFunctionCounter.GoRun(
+										"SshChannelListenerManager.ListenForNewConnections.Flush.AcceptedChannelRequestChannel",
+										func() {
+											for range acceptedChannelRequestChannel {
+											}
+										},
+									),
+								)
+								self.ZapLogger.Error("OnErrorFlush", zap.Error(err))
 							}
 						}(
 							self.ConnectionReactor,
