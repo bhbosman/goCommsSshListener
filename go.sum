@@ -1,8 +1,8 @@
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/benbjohnson/clock v1.3.0 h1:ip6w0uFQkncKQ979AypyG0ER7mqUSBdKLOgAle/AT8A=
 github.com/benbjohnson/clock v1.3.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
-github.com/bhbosman/gocommon v0.0.0-20230328150634-566a0f916878 h1:giTFJcUbn4abWJdRALlUKBBSlixJ7ELinOCLRUaP934=
-github.com/bhbosman/gocommon v0.0.0-20230328150634-566a0f916878/go.mod h1:oLW76CQyFhccvFZww5sISfcs8NvK6FJgsT4XwgoIuLo=
+github.com/bhbosman/gocommon v0.0.0-20230328205958-d21444a729d1 h1:fjlVZ/4JlSWXb5GGs9FdxivZ51sHx5WG4nqkHXg6jp4=
+github.com/bhbosman/gocommon v0.0.0-20230328205958-d21444a729d1/go.mod h1:JnxKvQovmCui35l+8gWf/N3GKbYWti5g3EMmqbXoCWA=
 github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf h1:uI7bP2Ue0pjjB8j2zWY+nRbjQgeTfmOW6VR7WvVGK1I=
 github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf/go.mod h1:2aeMPIIYjD7+5AmN1yaV/oAqCaExRDcl7SN+/zFLpew=
 github.com/bhbosman/gomessageblock v0.0.0-20230308173223-e8144f25444c h1:UQCbM3rXlsDsSpo6iJr0DeYRiEA7UT8+9UJkXwzI3kA=
