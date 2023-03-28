@@ -2,8 +2,8 @@ package netListener
 
 import (
 	"github.com/bhbosman/goCommsSshListener/internal"
-	"github.com/bhbosman/gocommon/Services/IDataShutDown"
-	"github.com/bhbosman/gocommon/Services/IFxService"
+	"github.com/bhbosman/gocommon/services/IDataShutDown"
+	"github.com/bhbosman/gocommon/services/IFxService"
 	"github.com/bhbosman/gocommon/services/ISendMessage"
 	"golang.org/x/crypto/ssh"
 )

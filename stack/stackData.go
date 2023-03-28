@@ -9,8 +9,8 @@ import (
 	"github.com/bhbosman/goCommsSshListener/internal"
 	"github.com/bhbosman/goConnectionManager"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
-	"github.com/bhbosman/gocommon/Services/interfaces"
 	"github.com/bhbosman/gocommon/model"
+	"github.com/bhbosman/gocommon/services/interfaces"
 	"github.com/bhbosman/gocomms/common"
 	"github.com/bhbosman/goerrors"
 	"github.com/reactivex/rxgo/v2"
@@ -165,7 +165,6 @@ func (self *data) handleChannelsAndRequest(
 		parse.String(),
 		channels,
 		self.conn,
-		self.cancelFunc,
 		common.MoreOptions(
 			fx.Provide(
 				fx.Annotated{
@@ -189,7 +188,7 @@ func (self *data) handleChannelsAndRequest(
 	callback, cancelFunc, err := app(netAppParams).Callback()
 	onError := func() {
 		if cancelFunc != nil {
-			cancelFunc()
+			//cancelFunc()
 		}
 	}
 
