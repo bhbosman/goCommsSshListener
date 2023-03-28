@@ -165,7 +165,6 @@ func (self *data) handleChannelsAndRequest(
 		parse.String(),
 		channels,
 		self.conn,
-		self.cancelFunc,
 		common.MoreOptions(
 			fx.Provide(
 				fx.Annotated{
@@ -189,7 +188,7 @@ func (self *data) handleChannelsAndRequest(
 	callback, cancelFunc, err := app(netAppParams).Callback()
 	onError := func() {
 		if cancelFunc != nil {
-			cancelFunc()
+			//cancelFunc()
 		}
 	}
 
