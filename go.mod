@@ -6,7 +6,7 @@ require github.com/bhbosman/goConn v0.0.0-20230320102125-d7416dd8d6dc
 
 
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
+	//github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
 	github.com/bhbosman/goCommsStacks v0.0.0-20220611141421-a7d405cadbfa
 	github.com/bhbosman/goConnectionManager v0.0.0-20230312204225-183859f3cef5
@@ -56,7 +56,7 @@ replace github.com/bhbosman/gocommon => ../gocommon
 
 replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20230302060806-d02c40b7514e
 
-replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
+//replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
 
 replace github.com/bhbosman/goCommsSSHProtocols => ../goCommsSSHProtocols
 
