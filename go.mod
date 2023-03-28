@@ -4,7 +4,6 @@ go 1.18
 
 require github.com/bhbosman/goConn v0.0.0-20230327111455-7a39299fb0aa
 
-
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
@@ -14,7 +13,7 @@ require (
 	github.com/bhbosman/gocomms v0.0.0-20230307212550-0918a992672c
 	github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf
 	github.com/bhbosman/gomessageblock v0.0.0-20230308173223-e8144f25444c
-	github.com/bhbosman/goprotoextra v0.0.2-0.20210817141206-117becbef7c7
+	github.com/bhbosman/goprotoextra v0.0.2
 	github.com/gdamore/tcell/v2 v2.5.1
 	github.com/golang/mock v1.6.0
 	go.uber.org/fx v1.19.2
@@ -54,13 +53,11 @@ replace github.com/cskr/pubsub => github.com/bhbosman/pubsub v1.0.3-0.2022080220
 
 replace github.com/rivo/tview => github.com/bhbosman/tview v0.0.0-20230310100135-f8b257a85d36
 
-
 replace github.com/bhbosman/gocomms => ../gocomms
 
 replace github.com/bhbosman/goMessages => ../goMessages
 
 //replace github.com/bhbosman/gocommon => ../gocommon
-
 
 replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
 
