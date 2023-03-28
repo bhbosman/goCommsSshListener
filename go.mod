@@ -14,7 +14,7 @@ require (
 	github.com/bhbosman/gocomms v0.0.0-20230307212550-0918a992672c
 	github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf
 	github.com/bhbosman/gomessageblock v0.0.0-20230308173223-e8144f25444c
-	github.com/bhbosman/goprotoextra v0.0.0-20230309055846-4d9940f8b875
+	github.com/bhbosman/goprotoextra v0.0.2
 	github.com/gdamore/tcell/v2 v2.5.1
 	github.com/golang/mock v1.6.0
 	go.uber.org/fx v1.19.2
