@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/bhbosman/goCommsSshListener/common"
 	"github.com/bhbosman/goCommsSshListener/internal"
-	"github.com/bhbosman/goConn"
 	"github.com/bhbosman/goConnectionManager"
+	"github.com/bhbosman/gocommon"
 	"github.com/bhbosman/gocommon/GoFunctionCounter"
 	"github.com/bhbosman/gocommon/model"
 	"github.com/bhbosman/gocommon/services/IFxService"
@@ -102,7 +102,7 @@ func (self *manager) ListenForNewConnections() error {
 					uniqueReference := self.UniqueSessionNumber.Next(self.ConnectionInstancePrefix)
 
 					ctx, cancelFunc := context.WithCancel(self.CancellationContext.CancelContext())
-					cancellationContext, err := goConn.NewCancellationContext(
+					cancellationContext, err := gocommon.NewCancellationContext(
 						uniqueReference,
 						cancelFunc,
 						ctx,
@@ -180,7 +180,7 @@ func (self *manager) ListenForNewConnections() error {
 					if err != nil {
 						// ??
 					}
-					_ = goConn.RegisterConnectionShutdown(
+					_ = gocommon.RegisterConnectionShutdown(
 						uniqueReference,
 						func(
 							connectionReactor internal.ISshConnectionReactor,
@@ -248,7 +248,7 @@ func NewManager(
 		CancelFunction                           context.CancelFunc
 		Settings                                 *channelListenerManagerSettings
 		ZapLogger                                *zap.Logger
-		CancellationContext                      goConn.ICancellationContext
+		CancellationContext                      gocommon.ICancellationContext
 		ConnectionName                           string `name:"ConnectionName"`
 		ConnectionInstancePrefix                 string `name:"ConnectionInstancePrefix"`
 		UniqueSessionNumber                      interfaces.IUniqueReferenceService

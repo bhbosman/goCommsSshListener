@@ -5,7 +5,7 @@ import (
 	"github.com/bhbosman/goCommsDefinitions"
 	"github.com/bhbosman/goCommsStacks/bottom"
 	"github.com/bhbosman/goCommsStacks/topStack"
-	"github.com/bhbosman/goConn"
+	"github.com/bhbosman/gocommon"
 	"github.com/bhbosman/gocommon/messages"
 	"github.com/bhbosman/gocomms/common"
 	"go.uber.org/fx"
@@ -25,7 +25,7 @@ func NewManagerApp(
 	return func(params common.NetAppFuncInParams) messages.CreateAppCallback {
 		return messages.CreateAppCallback{
 			Name: name,
-			Callback: func() (messages.IApp, goConn.ICancellationContext, error) {
+			Callback: func() (messages.IApp, gocommon.ICancellationContext, error) {
 				netListenSettings := &channelListenerManagerSettings{
 					NetManagerSettings:    common.NewNetManagerSettings(512),
 					userContext:           nil,
@@ -47,7 +47,7 @@ func NewManagerApp(
 
 				namedLogger := params.ZapLogger.Named(name)
 				ctx, cancelFunc := context.WithCancel(params.ParentContext)
-				cancellationContext, err := goConn.NewCancellationContextNoCloser(name, cancelFunc, ctx, namedLogger)
+				cancellationContext, err := gocommon.NewCancellationContextNoCloser(name, cancelFunc, ctx, namedLogger)
 
 				for _, setting := range settings {
 					if setting == nil {
