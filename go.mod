@@ -2,7 +2,7 @@ module github.com/bhbosman/goCommsSshListener
 
 go 1.18
 
-require github.com/bhbosman/goConn v0.0.0-20230327111455-7a39299fb0aa
+
 
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
@@ -71,4 +71,4 @@ replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
 
 replace github.com/bhbosman/goprotoextra => ../goprotoextra
 
-replace github.com/bhbosman/goConn => ../goConn
+
