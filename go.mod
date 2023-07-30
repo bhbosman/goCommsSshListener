@@ -31,15 +31,15 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
-	github.com/icza/gox v0.0.0-20220321141217-e2d488ab2fbc // indirect
+	github.com/icza/gox v0.0.0-20230330130131-23e1aaac139e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/reactivex/rxgo/v2 v2.5.0
 	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
-	github.com/teivah/onecontext v0.0.0-20200513185103-40f981bfd775 // indirect
+	github.com/teivah/onecontext v1.3.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	go.uber.org/dig v1.16.1 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	go.uber.org/dig v1.17.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
