@@ -2,15 +2,13 @@ module github.com/bhbosman/goCommsSshListener
 
 go 1.18
 
-
-
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20230313180751-41613a6b3173
+	github.com/bhbosman/goCommsDefinitions v0.0.0-20230329100608-a6a24c060ad8
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
 	github.com/bhbosman/goCommsStacks v0.0.0-20220611141421-a7d405cadbfa
-	github.com/bhbosman/goConnectionManager v0.0.0-20230312204225-183859f3cef5
+	github.com/bhbosman/goConnectionManager v0.0.0-20230329104211-b2d06385b410
 	github.com/bhbosman/gocommon v0.0.0-20230329101749-40db0f52d859
-	github.com/bhbosman/gocomms v0.0.0-20230307212550-0918a992672c
+	github.com/bhbosman/gocomms v0.0.0-20230329110556-946ebc6ff5f4
 	github.com/bhbosman/goerrors v0.0.0-20220623084908-4d7bbcd178cf
 	github.com/bhbosman/gomessageblock v0.0.0-20230308173223-e8144f25444c
 	github.com/bhbosman/goprotoextra v0.0.2
@@ -57,8 +55,6 @@ replace github.com/bhbosman/gocomms => ../gocomms
 
 replace github.com/bhbosman/goMessages => ../goMessages
 
-
-
 replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
 
 replace github.com/bhbosman/goCommsSSHProtocols => ../goCommsSSHProtocols
@@ -70,5 +66,3 @@ replace github.com/bhbosman/goCommsNetListener => ../goCommsNetListener
 replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
 
 replace github.com/bhbosman/goprotoextra => ../goprotoextra
-
-
