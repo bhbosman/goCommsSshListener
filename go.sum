@@ -21,6 +21,8 @@ github.com/bhbosman/goCommsStacks v0.0.0-20250308073453-2a34f22d9bb1 h1:4FQytGmS
 github.com/bhbosman/goCommsStacks v0.0.0-20250308073453-2a34f22d9bb1/go.mod h1:T/rbVuCWy0DJyeMb7j+WmiW2V4/f0UN/o42yJOHE5MQ=
 github.com/bhbosman/goCommsStacks v0.0.0-20250308122653-67040ed90c18 h1:fCsaTjUjrExk/PrAggcIe+A3/yaY/p9ViNglvupgxoQ=
 github.com/bhbosman/goCommsStacks v0.0.0-20250308122653-67040ed90c18/go.mod h1:8CYkY8G+BZASAdGkNzSUev3FAV62Tol7dOK7LccGRrE=
+github.com/bhbosman/goCommsStacks v0.0.0-20250308140058-bc4682f34818 h1:i35NxIJj+3/trmv4Qyj2TSWCWYp+LvX+zgxMgU61sXo=
+github.com/bhbosman/goCommsStacks v0.0.0-20250308140058-bc4682f34818/go.mod h1:uqoiVPJ5iW1OG0tVDNEzXRZFm3TzlqUq+l9lLlFJcoU=
 github.com/bhbosman/goConnectionManager v0.0.0-20250307224538-a79ceb218fd0 h1:OjR/f0uvTnscaExqGxL0uqPWoOAYJetEVofEvvEEOFQ=
 github.com/bhbosman/goConnectionManager v0.0.0-20250307224538-a79ceb218fd0/go.mod h1:dMKhszqDuA7ziup+oBPXkiIHnNU8JPAt5vEvyNkXXxk=
 github.com/bhbosman/goConnectionManager v0.0.0-20250308054322-587c786bedb0 h1:XdF25zaOXJb9XZEQ8yWWay/0SsgYvWJF4T7bvpyh76s=
