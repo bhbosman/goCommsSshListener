@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308144130-64993b60920c
-	github.com/bhbosman/goCommsNetListener v0.0.0-20250308152827-7ea57b5923dc
+	github.com/bhbosman/goCommsNetListener v0.0.0-20250308154802-78cc2d086d08
 	github.com/bhbosman/goCommsStacks v0.0.0-20250308150310-d89697671b2a
 	github.com/bhbosman/goConnectionManager v0.0.0-20250308150558-5d463bc5c9e3
 	github.com/bhbosman/gocommon v0.0.0-20250308150148-56b7e6e14bff
