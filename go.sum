@@ -53,6 +53,8 @@ github.com/bhbosman/gocommon v0.0.0-20250308131803-28622f55deb1 h1:H6xBDuvTUHP3H
 github.com/bhbosman/gocommon v0.0.0-20250308131803-28622f55deb1/go.mod h1:7lml5lQFGVyrvj3awVTQ0SdaqW3WdcKEC8hhcmNGOHE=
 github.com/bhbosman/gocommon v0.0.0-20250308150148-56b7e6e14bff h1:lDqy+h+pbnVXRxXnYyTDLhUA1qWsbFiUTox+30EHfwU=
 github.com/bhbosman/gocommon v0.0.0-20250308150148-56b7e6e14bff/go.mod h1:X1Vckq6MxT7Ozn4fMsUKXkgEgggnsBGs+HX9SWzl+Tk=
+github.com/bhbosman/gocommon v0.0.0-20250308155359-4baa9bec452e h1:92bvDBFSfI/1z0wJf1xgNFwRTAtQ/uPzU6SBtCwDsmo=
+github.com/bhbosman/gocommon v0.0.0-20250308155359-4baa9bec452e/go.mod h1:MgvoWc5dg34pZhFPxwkiw8QBQjYRG8Vg8SQ87+pmYXo=
 github.com/bhbosman/gocomms v0.0.0-20250308000247-0dafbc2926a9 h1:/BmfEj0hapFf8jDW1yZ0ePcHjVNysBmxwcWQVE/zPBY=
 github.com/bhbosman/gocomms v0.0.0-20250308000247-0dafbc2926a9/go.mod h1:2nOwvEALJ2+vzFZfQTt/lAvMGYtvk1eCwWTuy+5WmYM=
 github.com/bhbosman/gocomms v0.0.0-20250308053431-cfd3e830d8a5 h1:XLbRBpGbpeSQjatBfiK1onmDIoRY9ajyiSZ/XSdww9M=
