@@ -4,11 +4,11 @@ go 1.24.0
 
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308074916-3e7c0d32b971
-	github.com/bhbosman/goCommsNetListener v0.0.0-20250308072116-bc3af6251376
-	github.com/bhbosman/goCommsStacks v0.0.0-20250308073453-2a34f22d9bb1
-	github.com/bhbosman/goConnectionManager v0.0.0-20250308072343-5ecf88215e38
+	github.com/bhbosman/goCommsNetListener v0.0.0-20250308122653-28d9e53d4343
+	github.com/bhbosman/goCommsStacks v0.0.0-20250308122653-67040ed90c18
+	github.com/bhbosman/goConnectionManager v0.0.0-20250308122653-53a96fe357f2
 	github.com/bhbosman/gocommon v0.0.0-20250308071735-43b385b00819
-	github.com/bhbosman/gocomms v0.0.0-20250308073453-53d6befb6d1a
+	github.com/bhbosman/gocomms v0.0.0-20250308122654-329e339db0e0
 	github.com/bhbosman/goerrors v0.0.0-20250307194237-312d070c8e38
 	github.com/bhbosman/gomessageblock v0.0.0-20250308073733-0b3daca12e3a
 	github.com/bhbosman/goprotoextra v0.0.2
