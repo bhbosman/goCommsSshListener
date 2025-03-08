@@ -43,25 +43,6 @@ require (
 )
 
 replace github.com/gdamore/tcell/v2 => github.com/bhbosman/tcell/v2 v2.5.2-0.20250308093601-f0942a296aa0
-
 replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20250308071159-4cf72f668c72
-
 replace github.com/cskr/pubsub => github.com/bhbosman/pubsub v1.0.3-0.20250308124829-e5731aa33222
 
-replace github.com/rivo/tview => github.com/bhbosman/tview v0.0.0-20250308051327-a656c1bc9cfa
-
-//replace github.com/bhbosman/gocomms => ../gocomms
-
-//replace github.com/bhbosman/goMessages => ../goMessages
-//
-//replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
-//
-//replace github.com/bhbosman/goCommsSSHProtocols => ../goCommsSSHProtocols
-//
-//replace github.com/bhbosman/goCommsStacks => ../goCommsStacks
-//
-//replace github.com/bhbosman/goCommsNetListener => ../goCommsNetListener
-//
-//replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
-//
-//replace github.com/bhbosman/goprotoextra => ../goprotoextra
