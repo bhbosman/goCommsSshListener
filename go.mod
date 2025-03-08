@@ -6,7 +6,7 @@ require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308074916-3e7c0d32b971
 	github.com/bhbosman/goCommsNetListener v0.0.0-20250308122653-28d9e53d4343
 	github.com/bhbosman/goCommsStacks v0.0.0-20250308140058-bc4682f34818
-	github.com/bhbosman/goConnectionManager v0.0.0-20250308122653-53a96fe357f2
+	github.com/bhbosman/goConnectionManager v0.0.0-20250308133907-06eddcd798f6
 	github.com/bhbosman/gocommon v0.0.0-20250308131803-28622f55deb1
 	github.com/bhbosman/gocomms v0.0.0-20250308133812-cb1afb4044ed
 	github.com/bhbosman/goerrors v0.0.0-20250307194237-312d070c8e38
@@ -43,6 +43,7 @@ require (
 )
 
 replace github.com/gdamore/tcell/v2 => github.com/bhbosman/tcell/v2 v2.5.2-0.20250308093601-f0942a296aa0
-replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20250308071159-4cf72f668c72
-replace github.com/cskr/pubsub => github.com/bhbosman/pubsub v1.0.3-0.20250308124829-e5731aa33222
 
+replace github.com/golang/mock => github.com/bhbosman/gomock v1.6.1-0.20250308071159-4cf72f668c72
+
+replace github.com/cskr/pubsub => github.com/bhbosman/pubsub v1.0.3-0.20250308124829-e5731aa33222
