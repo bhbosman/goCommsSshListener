@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.24.0
 
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20230730212737-00ad0cf16194
+	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308000247-4306925b3dfd
 	github.com/bhbosman/goCommsNetListener v0.0.0-20220611182354-46d10d89b8e1
 	github.com/bhbosman/goCommsStacks v0.0.0-20220611141421-a7d405cadbfa
 	github.com/bhbosman/goConnectionManager v0.0.0-20250307224538-a79ceb218fd0
@@ -53,18 +53,18 @@ replace github.com/cskr/pubsub => github.com/bhbosman/pubsub v1.0.3-0.2022080220
 
 replace github.com/rivo/tview => github.com/bhbosman/tview v0.0.0-20230310100135-f8b257a85d36
 
-//replace github.com/bhbosman/gocomms => ../gocomms
-//
-//replace github.com/bhbosman/goMessages => ../goMessages
-//
-//replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
-//
-//replace github.com/bhbosman/goCommsSSHProtocols => ../goCommsSSHProtocols
-//
-//replace github.com/bhbosman/goCommsStacks => ../goCommsStacks
-//
-//replace github.com/bhbosman/goCommsNetListener => ../goCommsNetListener
-//
-//replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
-//
-//replace github.com/bhbosman/goprotoextra => ../goprotoextra
+replace github.com/bhbosman/gocomms => ../gocomms
+
+replace github.com/bhbosman/goMessages => ../goMessages
+
+replace github.com/bhbosman/goCommsDefinitions => ../goCommsDefinitions
+
+replace github.com/bhbosman/goCommsSSHProtocols => ../goCommsSSHProtocols
+
+replace github.com/bhbosman/goCommsStacks => ../goCommsStacks
+
+replace github.com/bhbosman/goCommsNetListener => ../goCommsNetListener
+
+replace github.com/bhbosman/goConnectionManager => ../goConnectionManager
+
+replace github.com/bhbosman/goprotoextra => ../goprotoextra
