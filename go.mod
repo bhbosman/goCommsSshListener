@@ -6,10 +6,10 @@ toolchain go1.24.0
 
 require (
 	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308000247-4306925b3dfd
-	github.com/bhbosman/goCommsNetListener v0.0.0-20231011182118-3481e4a0204e
+	github.com/bhbosman/goCommsNetListener v0.0.0-20250308054504-9e394f3cd581
 	github.com/bhbosman/goCommsStacks v0.0.0-20231011182118-47d6d38b38e4
 	github.com/bhbosman/goConnectionManager v0.0.0-20250307224538-a79ceb218fd0
-	github.com/bhbosman/gocommon v0.0.0-20250307235859-f370cb0a3bac
+	github.com/bhbosman/gocommon v0.0.0-20250308052839-0ebeb121f996
 	github.com/bhbosman/gocomms v0.0.0-20250308000247-0dafbc2926a9
 	github.com/bhbosman/goerrors v0.0.0-20250307194237-312d070c8e38
 	github.com/bhbosman/gomessageblock v0.0.0-20250307141417-ab783e8e2eba
