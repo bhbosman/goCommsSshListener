@@ -3,7 +3,7 @@ module github.com/bhbosman/goCommsSshListener
 go 1.24.0
 
 require (
-	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308000247-4306925b3dfd
+	github.com/bhbosman/goCommsDefinitions v0.0.0-20250308074916-3e7c0d32b971
 	github.com/bhbosman/goCommsNetListener v0.0.0-20250308072116-bc3af6251376
 	github.com/bhbosman/goCommsStacks v0.0.0-20250308073453-2a34f22d9bb1
 	github.com/bhbosman/goConnectionManager v0.0.0-20250308072343-5ecf88215e38
